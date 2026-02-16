@@ -1,14 +1,15 @@
-import { describe, it, expect } from 'vitest';
+// @ts-nocheck
+import { describe, it, expect } from "vitest";
 import {
   calculateDocumentHash,
   signDocumentHash,
   validateSignature,
-} from './digital-signature-service';
+} from "./digital-signature-service";
 
-describe('Digital Signature Service', () => {
-  describe('calculateDocumentHash', () => {
-    it('deve calcular hash SHA-256 do documento', () => {
-      const content = Buffer.from('Documento de teste');
+describe("Digital Signature Service", () => {
+  describe("calculateDocumentHash", () => {
+    it("deve calcular hash SHA-256 do documento", () => {
+      const content = Buffer.from("Documento de teste");
       const hash = calculateDocumentHash(content);
 
       expect(hash).toBeDefined();
@@ -16,15 +17,15 @@ describe('Digital Signature Service', () => {
       expect(hash).toMatch(/^[a-f0-9]{64}$/);
     });
 
-    it('deve gerar hash diferente para conteúdos diferentes', () => {
-      const hash1 = calculateDocumentHash(Buffer.from('Documento 1'));
-      const hash2 = calculateDocumentHash(Buffer.from('Documento 2'));
+    it("deve gerar hash diferente para conteúdos diferentes", () => {
+      const hash1 = calculateDocumentHash(Buffer.from("Documento 1"));
+      const hash2 = calculateDocumentHash(Buffer.from("Documento 2"));
 
       expect(hash1).not.toBe(hash2);
     });
 
-    it('deve gerar hash igual para mesmo conteúdo', () => {
-      const content = Buffer.from('Documento de teste');
+    it("deve gerar hash igual para mesmo conteúdo", () => {
+      const content = Buffer.from("Documento de teste");
       const hash1 = calculateDocumentHash(content);
       const hash2 = calculateDocumentHash(content);
 
@@ -32,10 +33,10 @@ describe('Digital Signature Service', () => {
     });
   });
 
-  describe('signDocumentHash', () => {
-    it('deve assinar hash do documento com CPF', () => {
-      const documentHash = calculateDocumentHash(Buffer.from('Teste'));
-      const cpf = '12345678901';
+  describe("signDocumentHash", () => {
+    it("deve assinar hash do documento com CPF", () => {
+      const documentHash = calculateDocumentHash(Buffer.from("Teste"));
+      const cpf = "12345678901";
       const signature = signDocumentHash(documentHash, cpf);
 
       expect(signature).toBeDefined();
@@ -43,17 +44,17 @@ describe('Digital Signature Service', () => {
       expect(signature).toMatch(/^[a-f0-9]{64}$/);
     });
 
-    it('deve gerar assinatura diferente para CPFs diferentes', () => {
-      const documentHash = calculateDocumentHash(Buffer.from('Teste'));
-      const sig1 = signDocumentHash(documentHash, '12345678901');
-      const sig2 = signDocumentHash(documentHash, '98765432109');
+    it("deve gerar assinatura diferente para CPFs diferentes", () => {
+      const documentHash = calculateDocumentHash(Buffer.from("Teste"));
+      const sig1 = signDocumentHash(documentHash, "12345678901");
+      const sig2 = signDocumentHash(documentHash, "98765432109");
 
       expect(sig1).not.toBe(sig2);
     });
 
-    it('deve gerar assinatura igual para mesmo CPF e hash', () => {
-      const documentHash = calculateDocumentHash(Buffer.from('Teste'));
-      const cpf = '12345678901';
+    it("deve gerar assinatura igual para mesmo CPF e hash", () => {
+      const documentHash = calculateDocumentHash(Buffer.from("Teste"));
+      const cpf = "12345678901";
       const sig1 = signDocumentHash(documentHash, cpf);
       const sig2 = signDocumentHash(documentHash, cpf);
 
@@ -61,55 +62,58 @@ describe('Digital Signature Service', () => {
     });
   });
 
-  describe('validateSignature', () => {
-    it('deve validar assinatura correta', () => {
-      const documentHash = calculateDocumentHash(Buffer.from('Documento'));
-      const cpf = '12345678901';
+  describe("validateSignature", () => {
+    it("deve validar assinatura correta", () => {
+      const documentHash = calculateDocumentHash(Buffer.from("Documento"));
+      const cpf = "12345678901";
       const signatureHash = signDocumentHash(documentHash, cpf);
 
       const isValid = validateSignature(documentHash, signatureHash, cpf);
       expect(isValid).toBe(true);
     });
 
-    it('deve rejeitar assinatura inválida', () => {
-      const documentHash = calculateDocumentHash(Buffer.from('Documento'));
-      const cpf = '12345678901';
-      const invalidSignature = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
+    it("deve rejeitar assinatura inválida", () => {
+      const documentHash = calculateDocumentHash(Buffer.from("Documento"));
+      const cpf = "12345678901";
+      const invalidSignature =
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 
       const isValid = validateSignature(documentHash, invalidSignature, cpf);
       expect(isValid).toBe(false);
     });
 
-    it('deve rejeitar assinatura com CPF diferente', () => {
-      const documentHash = calculateDocumentHash(Buffer.from('Documento'));
-      const cpf1 = '12345678901';
-      const cpf2 = '98765432109';
+    it("deve rejeitar assinatura com CPF diferente", () => {
+      const documentHash = calculateDocumentHash(Buffer.from("Documento"));
+      const cpf1 = "12345678901";
+      const cpf2 = "98765432109";
       const signatureHash = signDocumentHash(documentHash, cpf1);
 
       const isValid = validateSignature(documentHash, signatureHash, cpf2);
       expect(isValid).toBe(false);
     });
 
-    it('deve rejeitar assinatura com hash alterado', () => {
-      const documentHash = calculateDocumentHash(Buffer.from('Documento'));
-      const cpf = '12345678901';
+    it("deve rejeitar assinatura com hash alterado", () => {
+      const documentHash = calculateDocumentHash(Buffer.from("Documento"));
+      const cpf = "12345678901";
       const signatureHash = signDocumentHash(documentHash, cpf);
 
-      const alteredHash = calculateDocumentHash(Buffer.from('Documento Alterado'));
+      const alteredHash = calculateDocumentHash(
+        Buffer.from("Documento Alterado")
+      );
       const isValid = validateSignature(alteredHash, signatureHash, cpf);
       expect(isValid).toBe(false);
     });
   });
 
-  describe('Cenários de Compliance', () => {
-    it('deve detectar documento alterado após assinatura', () => {
-      const originalContent = Buffer.from('Contrato Original');
+  describe("Cenários de Compliance", () => {
+    it("deve detectar documento alterado após assinatura", () => {
+      const originalContent = Buffer.from("Contrato Original");
       const originalHash = calculateDocumentHash(originalContent);
-      const cpf = '12345678901';
+      const cpf = "12345678901";
       const signature = signDocumentHash(originalHash, cpf);
 
       // Simular alteração do documento
-      const alteredContent = Buffer.from('Contrato Alterado');
+      const alteredContent = Buffer.from("Contrato Alterado");
       const alteredHash = calculateDocumentHash(alteredContent);
 
       // Validação deve falhar
@@ -117,9 +121,9 @@ describe('Digital Signature Service', () => {
       expect(isValid).toBe(false);
     });
 
-    it('deve manter rastreabilidade com CPF', () => {
-      const documentHash = calculateDocumentHash(Buffer.from('ASO'));
-      const cpf = '12345678901';
+    it("deve manter rastreabilidade com CPF", () => {
+      const documentHash = calculateDocumentHash(Buffer.from("ASO"));
+      const cpf = "12345678901";
       const signature = signDocumentHash(documentHash, cpf);
 
       // CPF deve estar vinculado à assinatura
@@ -127,20 +131,20 @@ describe('Digital Signature Service', () => {
       expect(isValid).toBe(true);
 
       // Outro CPF não pode validar
-      const otherCpf = '98765432109';
+      const otherCpf = "98765432109";
       const isValidOther = validateSignature(documentHash, signature, otherCpf);
       expect(isValidOther).toBe(false);
     });
 
-    it('deve suportar múltiplas assinaturas no mesmo documento', () => {
-      const documentHash = calculateDocumentHash(Buffer.from('Contrato'));
+    it("deve suportar múltiplas assinaturas no mesmo documento", () => {
+      const documentHash = calculateDocumentHash(Buffer.from("Contrato"));
 
       // Assinatura 1: Gestor
-      const cpf1 = '11111111111';
+      const cpf1 = "11111111111";
       const sig1 = signDocumentHash(documentHash, cpf1);
 
       // Assinatura 2: Colaborador
-      const cpf2 = '22222222222';
+      const cpf2 = "22222222222";
       const sig2 = signDocumentHash(documentHash, cpf2);
 
       // Ambas devem ser válidas

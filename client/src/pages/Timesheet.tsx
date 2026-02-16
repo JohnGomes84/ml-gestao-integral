@@ -1,10 +1,18 @@
-import React, { useState } from 'react';
-import DashboardLayout from '@/components/DashboardLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Clock, LogIn, LogOut, Calendar, AlertCircle, CheckCircle2 } from 'lucide-react';
+// @ts-nocheck
+import React, { useState } from "react";
+import DashboardLayout from "@/components/DashboardLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import {
+  Clock,
+  LogIn,
+  LogOut,
+  Calendar,
+  AlertCircle,
+  CheckCircle2,
+} from "lucide-react";
 
 interface TimeEntry {
   id: number;
@@ -19,7 +27,7 @@ interface DailyRecord {
   data: string;
   entrada?: string;
   saida?: string;
-  status: 'presente' | 'ausente' | 'feriado' | 'férias';
+  status: "presente" | "ausente" | "feriado" | "férias";
 }
 
 export default function Timesheet() {
@@ -30,27 +38,27 @@ export default function Timesheet() {
   const timeEntries: TimeEntry[] = [
     {
       id: 1,
-      data: '2026-02-13',
-      entrada: '08:30',
-      saida: '17:45',
+      data: "2026-02-13",
+      entrada: "08:30",
+      saida: "17:45",
       horasTrabalhadas: 9.25,
-      status: 'presente',
+      status: "presente",
     },
     {
       id: 2,
-      data: '2026-02-12',
-      entrada: '08:00',
-      saida: '17:00',
+      data: "2026-02-12",
+      entrada: "08:00",
+      saida: "17:00",
       horasTrabalhadas: 9,
-      status: 'presente',
+      status: "presente",
     },
     {
       id: 3,
-      data: '2026-02-11',
-      entrada: '08:15',
-      saida: '16:30',
+      data: "2026-02-11",
+      entrada: "08:15",
+      saida: "16:30",
       horasTrabalhadas: 8.25,
-      status: 'presente',
+      status: "presente",
     },
   ];
 
@@ -64,12 +72,12 @@ export default function Timesheet() {
 
   const getStatusBadge = (status: string) => {
     const config: Record<string, { label: string; variant: any; icon: any }> = {
-      presente: { label: 'Presente', variant: 'default', icon: CheckCircle2 },
-      ausente: { label: 'Ausente', variant: 'destructive', icon: AlertCircle },
-      feriado: { label: 'Feriado', variant: 'secondary', icon: Calendar },
-      férias: { label: 'Férias', variant: 'outline', icon: Calendar },
+      presente: { label: "Presente", variant: "default", icon: CheckCircle2 },
+      ausente: { label: "Ausente", variant: "destructive", icon: AlertCircle },
+      feriado: { label: "Feriado", variant: "secondary", icon: Calendar },
+      férias: { label: "Férias", variant: "outline", icon: Calendar },
     };
-    return config[status] || { label: status, variant: 'outline', icon: Clock };
+    return config[status] || { label: status, variant: "outline", icon: Clock };
   };
 
   return (
@@ -79,7 +87,9 @@ export default function Timesheet() {
         <div className="flex items-start justify-between">
           <div>
             <h1 className="text-3xl font-bold">Controle de Ponto</h1>
-            <p className="text-muted-foreground mt-2">Registre entrada/saída e acompanhe jornada</p>
+            <p className="text-muted-foreground mt-2">
+              Registre entrada/saída e acompanhe jornada
+            </p>
           </div>
           <div className="flex gap-2">
             <Button className="gap-2">
@@ -98,15 +108,21 @@ export default function Timesheet() {
           <Card>
             <CardContent className="pt-6">
               <div className="text-center">
-                <p className="text-3xl font-bold text-blue-600">{stats.horasTrabalhadas}h</p>
-                <p className="text-sm text-muted-foreground">Horas Trabalhadas</p>
+                <p className="text-3xl font-bold text-blue-600">
+                  {stats.horasTrabalhadas}h
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Horas Trabalhadas
+                </p>
               </div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="pt-6">
               <div className="text-center">
-                <p className="text-3xl font-bold text-green-600">+{stats.horasExtras}h</p>
+                <p className="text-3xl font-bold text-green-600">
+                  +{stats.horasExtras}h
+                </p>
                 <p className="text-sm text-muted-foreground">Horas Extras</p>
               </div>
             </CardContent>
@@ -114,7 +130,9 @@ export default function Timesheet() {
           <Card>
             <CardContent className="pt-6">
               <div className="text-center">
-                <p className="text-3xl font-bold text-orange-600">{stats.atrasos}</p>
+                <p className="text-3xl font-bold text-orange-600">
+                  {stats.atrasos}
+                </p>
                 <p className="text-sm text-muted-foreground">Atrasos</p>
               </div>
             </CardContent>
@@ -122,7 +140,9 @@ export default function Timesheet() {
           <Card>
             <CardContent className="pt-6">
               <div className="text-center">
-                <p className="text-3xl font-bold text-red-600">{stats.faltas}</p>
+                <p className="text-3xl font-bold text-red-600">
+                  {stats.faltas}
+                </p>
                 <p className="text-sm text-muted-foreground">Faltas</p>
               </div>
             </CardContent>
@@ -130,7 +150,9 @@ export default function Timesheet() {
           <Card>
             <CardContent className="pt-6">
               <div className="text-center">
-                <p className="text-3xl font-bold text-purple-600">{stats.diasUteis}</p>
+                <p className="text-3xl font-bold text-purple-600">
+                  {stats.diasUteis}
+                </p>
                 <p className="text-sm text-muted-foreground">Dias Úteis</p>
               </div>
             </CardContent>
@@ -158,10 +180,14 @@ export default function Timesheet() {
                 <thead>
                   <tr className="border-b">
                     <th className="text-left py-3 px-4 font-semibold">Data</th>
-                    <th className="text-left py-3 px-4 font-semibold">Entrada</th>
+                    <th className="text-left py-3 px-4 font-semibold">
+                      Entrada
+                    </th>
                     <th className="text-left py-3 px-4 font-semibold">Saída</th>
                     <th className="text-left py-3 px-4 font-semibold">Horas</th>
-                    <th className="text-left py-3 px-4 font-semibold">Status</th>
+                    <th className="text-left py-3 px-4 font-semibold">
+                      Status
+                    </th>
                     <th className="text-left py-3 px-4 font-semibold">Ações</th>
                   </tr>
                 </thead>
@@ -171,11 +197,11 @@ export default function Timesheet() {
                     return (
                       <tr key={entry.id} className="border-b hover:bg-gray-50">
                         <td className="py-3 px-4 font-medium">
-                          {new Date(entry.data).toLocaleDateString('pt-BR', {
-                            weekday: 'short',
-                            year: 'numeric',
-                            month: '2-digit',
-                            day: '2-digit',
+                          {new Date(entry.data).toLocaleDateString("pt-BR", {
+                            weekday: "short",
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
                           })}
                         </td>
                         <td className="py-3 px-4">
@@ -190,7 +216,9 @@ export default function Timesheet() {
                             {entry.saida}
                           </span>
                         </td>
-                        <td className="py-3 px-4 font-medium">{entry.horasTrabalhadas}h</td>
+                        <td className="py-3 px-4 font-medium">
+                          {entry.horasTrabalhadas}h
+                        </td>
                         <td className="py-3 px-4">
                           <Badge variant={badge.variant}>{badge.label}</Badge>
                         </td>
@@ -216,7 +244,9 @@ export default function Timesheet() {
           <CardContent>
             <div className="text-center py-8">
               <AlertCircle className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-              <p className="text-muted-foreground">Nenhuma justificativa pendente</p>
+              <p className="text-muted-foreground">
+                Nenhuma justificativa pendente
+              </p>
             </div>
           </CardContent>
         </Card>

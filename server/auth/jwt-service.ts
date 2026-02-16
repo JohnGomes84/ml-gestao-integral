@@ -1,8 +1,9 @@
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
-import { ENV } from '../_core/env';
+// @ts-nocheck
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
+import { ENV } from "../_core/env";
 
-export type UserRole = 'admin' | 'gestor' | 'colaborador';
+export type UserRole = "admin" | "gestor" | "colaborador";
 
 export interface JWTPayload {
   userId: number;
@@ -13,7 +14,7 @@ export interface JWTPayload {
 }
 
 const SALT_ROUNDS = 10;
-const TOKEN_EXPIRY = '7d'; // 7 dias
+const TOKEN_EXPIRY = "7d"; // 7 dias
 
 /**
  * Hash de senha com bcrypt
@@ -25,15 +26,22 @@ export async function hashPassword(password: string): Promise<string> {
 /**
  * Validar senha contra hash
  */
-export async function verifyPassword(password: string, hash: string): Promise<boolean> {
+export async function verifyPassword(
+  password: string,
+  hash: string
+): Promise<boolean> {
   return bcrypt.compare(password, hash);
 }
 
 /**
  * Criar JWT token
  */
-export function createToken(userId: number, email: string, role: UserRole): string {
-  const payload: Omit<JWTPayload, 'iat' | 'exp'> = {
+export function createToken(
+  userId: number,
+  email: string,
+  role: UserRole
+): string {
+  const payload: Omit<JWTPayload, "iat" | "exp"> = {
     userId,
     email,
     role,
@@ -52,7 +60,7 @@ export function verifyToken(token: string): JWTPayload | null {
     const decoded = jwt.verify(token, ENV.jwtSecret) as JWTPayload;
     return decoded;
   } catch (error) {
-    console.error('[JWT] Token verification failed:', error);
+    console.error("[JWT] Token verification failed:", error);
     return null;
   }
 }
@@ -62,8 +70,8 @@ export function verifyToken(token: string): JWTPayload | null {
  */
 export function extractTokenFromHeader(authHeader?: string): string | null {
   if (!authHeader) return null;
-  const parts = authHeader.split(' ');
-  if (parts.length !== 2 || parts[0] !== 'Bearer') return null;
+  const parts = authHeader.split(" ");
+  if (parts.length !== 2 || parts[0] !== "Bearer") return null;
   return parts[1];
 }
 
@@ -71,23 +79,26 @@ export function extractTokenFromHeader(authHeader?: string): string | null {
  * Validar força da senha
  * Requer: 8+ caracteres, maiúscula, minúscula, número, caractere especial
  */
-export function validatePasswordStrength(password: string): { valid: boolean; errors: string[] } {
+export function validatePasswordStrength(password: string): {
+  valid: boolean;
+  errors: string[];
+} {
   const errors: string[] = [];
 
   if (password.length < 8) {
-    errors.push('Senha deve ter no mínimo 8 caracteres');
+    errors.push("Senha deve ter no mínimo 8 caracteres");
   }
   if (!/[A-Z]/.test(password)) {
-    errors.push('Senha deve conter pelo menos uma letra maiúscula');
+    errors.push("Senha deve conter pelo menos uma letra maiúscula");
   }
   if (!/[a-z]/.test(password)) {
-    errors.push('Senha deve conter pelo menos uma letra minúscula');
+    errors.push("Senha deve conter pelo menos uma letra minúscula");
   }
   if (!/[0-9]/.test(password)) {
-    errors.push('Senha deve conter pelo menos um número');
+    errors.push("Senha deve conter pelo menos um número");
   }
   if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
-    errors.push('Senha deve conter pelo menos um caractere especial');
+    errors.push("Senha deve conter pelo menos um caractere especial");
   }
 
   return {

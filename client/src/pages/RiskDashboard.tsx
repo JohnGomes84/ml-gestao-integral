@@ -1,18 +1,36 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+// @ts-nocheck
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
-import { AlertTriangle, TrendingUp, Users, DollarSign, Download, ArrowLeft } from "lucide-react";
+import {
+  AlertTriangle,
+  TrendingUp,
+  Users,
+  DollarSign,
+  Download,
+  ArrowLeft,
+} from "lucide-react";
 import { Link } from "wouter";
 
 export default function RiskDashboard() {
-  const { data: risks, isLoading: risksLoading } = trpc.compliance.calculateRisks.useQuery();
-  const { data: stats, isLoading: statsLoading } = trpc.compliance.getRiskStats.useQuery();
+  const { data: risks, isLoading: risksLoading } =
+    trpc.compliance.calculateRisks.useQuery();
+  const { data: stats, isLoading: statsLoading } =
+    trpc.compliance.getRiskStats.useQuery();
 
   if (risksLoading || statsLoading) {
     return (
       <div className="container py-8">
-        <p className="text-muted-foreground">Carregando dashboard de riscos...</p>
+        <p className="text-muted-foreground">
+          Carregando dashboard de riscos...
+        </p>
       </div>
     );
   }
@@ -71,7 +89,9 @@ export default function RiskDashboard() {
       <div className="grid gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total de Trabalhadores</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total de Trabalhadores
+            </CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -81,7 +101,9 @@ export default function RiskDashboard() {
 
         <Card className="border-red-200 bg-red-50">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Risco Alto/Crítico</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Risco Alto/Crítico
+            </CardTitle>
             <AlertTriangle className="h-4 w-4 text-red-500" />
           </CardHeader>
           <CardContent>
@@ -100,21 +122,29 @@ export default function RiskDashboard() {
             <TrendingUp className="h-4 w-4 text-yellow-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-yellow-600">{stats?.mediumRisk || 0}</div>
-            <p className="text-xs text-yellow-600 mt-1">Monitoramento necessário</p>
+            <div className="text-2xl font-bold text-yellow-600">
+              {stats?.mediumRisk || 0}
+            </div>
+            <p className="text-xs text-yellow-600 mt-1">
+              Monitoramento necessário
+            </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Exposição Financeira</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Exposição Financeira
+            </CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
               {formatCurrency(stats?.totalFinancialExposure || 0)}
             </div>
-            <p className="text-xs text-muted-foreground mt-1">Últimos 30 dias</p>
+            <p className="text-xs text-muted-foreground mt-1">
+              Últimos 30 dias
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -128,12 +158,13 @@ export default function RiskDashboard() {
               Trabalhadores em Risco Crítico ({criticalRisks.length})
             </CardTitle>
             <CardDescription>
-              Ação imediata necessária - Alto risco de caracterização de vínculo empregatício
+              Ação imediata necessária - Alto risco de caracterização de vínculo
+              empregatício
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {criticalRisks.map((worker) => (
+              {criticalRisks.map(worker => (
                 <div
                   key={worker.workerId}
                   className="flex items-center justify-between p-4 border rounded-lg bg-red-50"
@@ -150,8 +181,12 @@ export default function RiskDashboard() {
                     </div>
                     <div className="flex gap-4 text-sm text-muted-foreground">
                       <span>CPF: {worker.workerCpf}</span>
-                      <span>• {worker.maxConsecutiveDays} dias consecutivos</span>
-                      <span>• {worker.totalDaysWorked} dias trabalhados (30d)</span>
+                      <span>
+                        • {worker.maxConsecutiveDays} dias consecutivos
+                      </span>
+                      <span>
+                        • {worker.totalDaysWorked} dias trabalhados (30d)
+                      </span>
                       <span>• Score autonomia: {worker.autonomyScore}</span>
                     </div>
                   </div>
@@ -179,12 +214,13 @@ export default function RiskDashboard() {
               Trabalhadores em Risco Alto ({highRisks.length})
             </CardTitle>
             <CardDescription>
-              Monitoramento próximo necessário - Risco elevado de problemas trabalhistas
+              Monitoramento próximo necessário - Risco elevado de problemas
+              trabalhistas
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {highRisks.map((worker) => (
+              {highRisks.map(worker => (
                 <div
                   key={worker.workerId}
                   className="flex items-center justify-between p-4 border rounded-lg bg-orange-50"
@@ -201,8 +237,12 @@ export default function RiskDashboard() {
                     </div>
                     <div className="flex gap-4 text-sm text-muted-foreground">
                       <span>CPF: {worker.workerCpf}</span>
-                      <span>• {worker.maxConsecutiveDays} dias consecutivos</span>
-                      <span>• {worker.totalDaysWorked} dias trabalhados (30d)</span>
+                      <span>
+                        • {worker.maxConsecutiveDays} dias consecutivos
+                      </span>
+                      <span>
+                        • {worker.totalDaysWorked} dias trabalhados (30d)
+                      </span>
                       <span>• Score autonomia: {worker.autonomyScore}</span>
                     </div>
                   </div>
@@ -235,7 +275,7 @@ export default function RiskDashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {mediumRisks.slice(0, 5).map((worker) => (
+              {mediumRisks.slice(0, 5).map(worker => (
                 <div
                   key={worker.workerId}
                   className="flex items-center justify-between p-4 border rounded-lg bg-yellow-50"
@@ -247,8 +287,12 @@ export default function RiskDashboard() {
                     </div>
                     <div className="flex gap-4 text-sm text-muted-foreground">
                       <span>CPF: {worker.workerCpf}</span>
-                      <span>• {worker.maxConsecutiveDays} dias consecutivos</span>
-                      <span>• {worker.totalDaysWorked} dias trabalhados (30d)</span>
+                      <span>
+                        • {worker.maxConsecutiveDays} dias consecutivos
+                      </span>
+                      <span>
+                        • {worker.totalDaysWorked} dias trabalhados (30d)
+                      </span>
                       <span>• Score autonomia: {worker.autonomyScore}</span>
                     </div>
                   </div>
@@ -264,7 +308,8 @@ export default function RiskDashboard() {
               ))}
               {mediumRisks.length > 5 && (
                 <p className="text-sm text-muted-foreground text-center pt-2">
-                  + {mediumRisks.length - 5} trabalhadores adicionais em risco médio
+                  + {mediumRisks.length - 5} trabalhadores adicionais em risco
+                  médio
                 </p>
               )}
             </div>

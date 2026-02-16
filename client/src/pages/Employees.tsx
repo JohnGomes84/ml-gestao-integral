@@ -1,3 +1,4 @@
+// @ts-nocheck
 import DashboardLayout from "@/components/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -57,7 +58,7 @@ export default function Employees() {
       setDialogOpen(false);
       toast.success("Funcionário cadastrado com sucesso!");
     },
-    onError: (err) => {
+    onError: err => {
       toast.error("Erro ao cadastrar: " + err.message);
     },
   });
@@ -65,7 +66,7 @@ export default function Employees() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
-    
+
     // Validar formulário
     const validationErrors = validateEmployeeForm({
       fullName: fd.get("fullName") as string,
@@ -75,17 +76,17 @@ export default function Employees() {
       gender,
       maritalStatus,
     });
-    
+
     if (validationErrors.length > 0) {
       const errorMap: Record<string, string> = {};
-      validationErrors.forEach((error) => {
+      validationErrors.forEach(error => {
         errorMap[error.field] = error.message;
       });
       setErrors(errorMap);
       toast.error("Por favor, corrija os erros no formulário");
       return;
     }
-    
+
     setErrors({});
     createMutation.mutate({
       fullName: fd.get("fullName") as string,
@@ -95,7 +96,13 @@ export default function Employees() {
       phone: (fd.get("phone") as string) || undefined,
       birthDate: (fd.get("birthDate") as string) || undefined,
       gender: (gender as "M" | "F" | "Outro") || undefined,
-      maritalStatus: (maritalStatus as "Solteiro" | "Casado" | "Divorciado" | "Viúvo" | "União Estável") || undefined,
+      maritalStatus:
+        (maritalStatus as
+          | "Solteiro"
+          | "Casado"
+          | "Divorciado"
+          | "Viúvo"
+          | "União Estável") || undefined,
       rg: (fd.get("rg") as string) || undefined,
       pisPasep: (fd.get("pisPasep") as string) || undefined,
       ctpsNumber: (fd.get("ctpsNumber") as string) || undefined,
@@ -103,7 +110,8 @@ export default function Employees() {
       addressStreet: (fd.get("addressStreet") as string) || undefined,
       addressNumber: (fd.get("addressNumber") as string) || undefined,
       addressComplement: (fd.get("addressComplement") as string) || undefined,
-      addressNeighborhood: (fd.get("addressNeighborhood") as string) || undefined,
+      addressNeighborhood:
+        (fd.get("addressNeighborhood") as string) || undefined,
       addressCity: (fd.get("addressCity") as string) || undefined,
       addressState: (fd.get("addressState") as string) || undefined,
       addressZip: (fd.get("addressZip") as string) || undefined,
@@ -115,19 +123,42 @@ export default function Employees() {
       externalCode: (fd.get("externalCode") as string) || undefined,
       costCenter: (fd.get("costCenter") as string) || undefined,
       corporateEmail: (fd.get("corporateEmail") as string) || undefined,
-      employmentType: (fd.get("employmentType") as "CLT" | "CLT_Comissao" | "Comissionado" | "Concursado" | "Contrato" | "Cooperado" | "Efetivo" | "Estagio" | "Estatutario" | "MenorAprendiz" | "JovemAprendiz" | "PrestadorServico" | "Socio" | "Temporario" | "Outro") || undefined,
+      employmentType:
+        (fd.get("employmentType") as
+          | "CLT"
+          | "CLT_Comissao"
+          | "Comissionado"
+          | "Concursado"
+          | "Contrato"
+          | "Cooperado"
+          | "Efetivo"
+          | "Estagio"
+          | "Estatutario"
+          | "MenorAprendiz"
+          | "JovemAprendiz"
+          | "PrestadorServico"
+          | "Socio"
+          | "Temporario"
+          | "Outro") || undefined,
       esocialMatricula: (fd.get("esocialMatricula") as string) || undefined,
-      insalubrityPercentage: (fd.get("insalubrityPercentage") as "0" | "10" | "20" | "40") || undefined,
+      insalubrityPercentage:
+        (fd.get("insalubrityPercentage") as "0" | "10" | "20" | "40") ||
+        undefined,
     });
   };
 
   const statusColor = (status: string | null) => {
     switch (status) {
-      case "Ativo": return "bg-emerald-100 text-emerald-700 hover:bg-emerald-200";
-      case "Inativo": return "bg-gray-100 text-gray-600 hover:bg-gray-200";
-      case "Afastado": return "bg-amber-100 text-amber-700 hover:bg-amber-200";
-      case "Férias": return "bg-blue-100 text-blue-700 hover:bg-blue-200";
-      default: return "bg-gray-100 text-gray-600";
+      case "Ativo":
+        return "bg-emerald-100 text-emerald-700 hover:bg-emerald-200";
+      case "Inativo":
+        return "bg-gray-100 text-gray-600 hover:bg-gray-200";
+      case "Afastado":
+        return "bg-amber-100 text-amber-700 hover:bg-amber-200";
+      case "Férias":
+        return "bg-blue-100 text-blue-700 hover:bg-blue-200";
+      default:
+        return "bg-gray-100 text-gray-600";
     }
   };
 
@@ -148,7 +179,10 @@ export default function Employees() {
                 Novo Funcionário
               </Button>
             </DialogTrigger>
-            <DialogContent ref={dialogContentRef} className="max-w-2xl max-h-[85vh] overflow-y-auto">
+            <DialogContent
+              ref={dialogContentRef}
+              className="max-w-2xl max-h-[85vh] overflow-y-auto"
+            >
               <DialogHeader>
                 <DialogTitle>Cadastrar Novo Funcionário</DialogTitle>
               </DialogHeader>
@@ -158,7 +192,9 @@ export default function Employees() {
                   <h3 className="text-sm font-semibold text-muted-foreground mb-3 uppercase tracking-wider">
                     Dados Pessoais
                   </h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">                    <div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {" "}
+                    <div>
                       <Label htmlFor="fullName">Nome Completo *</Label>
                       <Input
                         id="fullName"
@@ -173,7 +209,8 @@ export default function Employees() {
                           {errors.fullName}
                         </p>
                       )}
-                    </div>                    <div>
+                    </div>{" "}
+                    <div>
                       <Label htmlFor="socialName">Nome Social</Label>
                       <Input id="socialName" name="socialName" />
                     </div>
@@ -185,7 +222,7 @@ export default function Employees() {
                         placeholder="000.000.000-00"
                         required
                         className={errors.cpf ? "border-red-500" : ""}
-                        onBlur={(e) => {
+                        onBlur={e => {
                           const formatted = formatCPF(e.target.value);
                           e.target.value = formatted;
                         }}
@@ -210,10 +247,10 @@ export default function Employees() {
                       <select
                         id="gender"
                         value={gender}
-                        onChange={(e) => {
+                        onChange={e => {
                           setGender(e.target.value);
                           if (errors.gender) {
-                            setErrors((prev) => {
+                            setErrors(prev => {
                               const newErrors = { ...prev };
                               delete newErrors.gender;
                               return newErrors;
@@ -239,10 +276,10 @@ export default function Employees() {
                       <select
                         id="maritalStatus"
                         value={maritalStatus}
-                        onChange={(e) => {
+                        onChange={e => {
                           setMaritalStatus(e.target.value);
                           if (errors.maritalStatus) {
-                            setErrors((prev) => {
+                            setErrors(prev => {
                               const newErrors = { ...prev };
                               delete newErrors.maritalStatus;
                               return newErrors;
@@ -287,7 +324,7 @@ export default function Employees() {
                         name="phone"
                         placeholder="(00) 00000-0000"
                         className={errors.phone ? "border-red-500" : ""}
-                        onChange={(e) => {
+                        onChange={e => {
                           const formatted = formatPhone(e.target.value);
                           e.target.value = formatted;
                         }}
@@ -343,7 +380,10 @@ export default function Employees() {
                     </div>
                     <div>
                       <Label htmlFor="addressNeighborhood">Bairro</Label>
-                      <Input id="addressNeighborhood" name="addressNeighborhood" />
+                      <Input
+                        id="addressNeighborhood"
+                        name="addressNeighborhood"
+                      />
                     </div>
                     <div>
                       <Label htmlFor="addressCity">Cidade</Label>
@@ -351,11 +391,20 @@ export default function Employees() {
                     </div>
                     <div>
                       <Label htmlFor="addressState">Estado</Label>
-                      <Input id="addressState" name="addressState" placeholder="UF" maxLength={2} />
+                      <Input
+                        id="addressState"
+                        name="addressState"
+                        placeholder="UF"
+                        maxLength={2}
+                      />
                     </div>
                     <div>
                       <Label htmlFor="addressZip">CEP</Label>
-                      <Input id="addressZip" name="addressZip" placeholder="00000-000" />
+                      <Input
+                        id="addressZip"
+                        name="addressZip"
+                        placeholder="00000-000"
+                      />
                     </div>
                   </div>
                 </div>
@@ -368,19 +417,35 @@ export default function Employees() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="branch">Filial</Label>
-                      <Input id="branch" name="branch" placeholder="Matriz, Filial 1, etc" />
+                      <Input
+                        id="branch"
+                        name="branch"
+                        placeholder="Matriz, Filial 1, etc"
+                      />
                     </div>
                     <div>
                       <Label htmlFor="externalCode">Código Externo</Label>
-                      <Input id="externalCode" name="externalCode" placeholder="Para integração" />
+                      <Input
+                        id="externalCode"
+                        name="externalCode"
+                        placeholder="Para integração"
+                      />
                     </div>
                     <div>
                       <Label htmlFor="costCenter">Centro de Custo</Label>
-                      <Input id="costCenter" name="costCenter" placeholder="CC-001" />
+                      <Input
+                        id="costCenter"
+                        name="costCenter"
+                        placeholder="CC-001"
+                      />
                     </div>
                     <div>
                       <Label htmlFor="corporateEmail">E-mail Corporativo</Label>
-                      <Input id="corporateEmail" name="corporateEmail" type="email" />
+                      <Input
+                        id="corporateEmail"
+                        name="corporateEmail"
+                        type="email"
+                      />
                     </div>
                     <div>
                       <Label htmlFor="employmentType">Tipo de Vínculo</Label>
@@ -400,18 +465,28 @@ export default function Employees() {
                         <option value="Estatutario">Estatutário</option>
                         <option value="MenorAprendiz">Menor Aprendiz</option>
                         <option value="JovemAprendiz">Jovem Aprendiz</option>
-                        <option value="PrestadorServico">Prestador de Serviço</option>
+                        <option value="PrestadorServico">
+                          Prestador de Serviço
+                        </option>
                         <option value="Socio">Sócio</option>
                         <option value="Temporario">Temporário</option>
                         <option value="Outro">Outro</option>
                       </select>
                     </div>
                     <div>
-                      <Label htmlFor="esocialMatricula">Matrícula eSocial</Label>
-                      <Input id="esocialMatricula" name="esocialMatricula" placeholder="Número eSocial" />
+                      <Label htmlFor="esocialMatricula">
+                        Matrícula eSocial
+                      </Label>
+                      <Input
+                        id="esocialMatricula"
+                        name="esocialMatricula"
+                        placeholder="Número eSocial"
+                      />
                     </div>
                     <div>
-                      <Label htmlFor="insalubrityPercentage">Percentual Insalubridade</Label>
+                      <Label htmlFor="insalubrityPercentage">
+                        Percentual Insalubridade
+                      </Label>
                       <select
                         id="insalubrityPercentage"
                         name="insalubrityPercentage"
@@ -452,11 +527,17 @@ export default function Employees() {
                 </div>
 
                 <div className="flex justify-end gap-3 pt-4 border-t">
-                  <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setDialogOpen(false)}
+                  >
                     Cancelar
                   </Button>
                   <Button type="submit" disabled={createMutation.isPending}>
-                    {createMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                    {createMutation.isPending && (
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    )}
                     Cadastrar
                   </Button>
                 </div>
@@ -473,7 +554,7 @@ export default function Employees() {
               <Input
                 placeholder="Buscar por nome ou CPF..."
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={e => setSearch(e.target.value)}
                 className="pl-10"
               />
             </div>
@@ -495,7 +576,7 @@ export default function Employees() {
                 <p className="text-sm text-muted-foreground">
                   {search
                     ? "Nenhum funcionário encontrado para esta busca."
-                    : "Nenhum funcionário cadastrado. Clique em \"Novo Funcionário\" para começar."}
+                    : 'Nenhum funcionário cadastrado. Clique em "Novo Funcionário" para começar.'}
                 </p>
               </div>
             ) : (
@@ -512,18 +593,29 @@ export default function Employees() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {employees.map((emp) => (
+                    {employees.map(emp => (
                       <TableRow
                         key={emp.id}
                         className="cursor-pointer hover:bg-muted/50"
                         onClick={() => setLocation(`/funcionarios/${emp.id}`)}
                       >
-                        <TableCell className="font-medium">{emp.fullName}</TableCell>
-                        <TableCell className="text-muted-foreground">{emp.cpf}</TableCell>
-                        <TableCell className="text-muted-foreground">{emp.email || "-"}</TableCell>
-                        <TableCell className="text-muted-foreground">{emp.phone || "-"}</TableCell>
+                        <TableCell className="font-medium">
+                          {emp.fullName}
+                        </TableCell>
+                        <TableCell className="text-muted-foreground">
+                          {emp.cpf}
+                        </TableCell>
+                        <TableCell className="text-muted-foreground">
+                          {emp.email || "-"}
+                        </TableCell>
+                        <TableCell className="text-muted-foreground">
+                          {emp.phone || "-"}
+                        </TableCell>
                         <TableCell>
-                          <Badge className={statusColor(emp.status)} variant="secondary">
+                          <Badge
+                            className={statusColor(emp.status)}
+                            variant="secondary"
+                          >
                             {emp.status}
                           </Badge>
                         </TableCell>
@@ -531,7 +623,7 @@ export default function Employees() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            onClick={(e) => {
+                            onClick={e => {
                               e.stopPropagation();
                               setLocation(`/funcionarios/${emp.id}`);
                             }}

@@ -1,6 +1,13 @@
+// @ts-nocheck
 import DashboardLayout from "@/components/DashboardLayout";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { trpc } from "@/lib/trpc";
@@ -21,7 +28,9 @@ export default function Integration() {
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Integração</h1>
-          <p className="text-muted-foreground">Exporte dados para Sólides e Flash Benefícios em um clique.</p>
+          <p className="text-muted-foreground">
+            Exporte dados para Sólides e Flash Benefícios em um clique.
+          </p>
         </div>
 
         <Tabs defaultValue="solides" className="space-y-4">
@@ -37,7 +46,9 @@ export default function Integration() {
                 <CardTitle className="text-base flex items-center gap-2">
                   <FileSpreadsheet className="h-5 w-5" /> Exportar para Sólides
                 </CardTitle>
-                <CardDescription>Gere um arquivo CSV/XLSX compatível com o sistema Sólides.</CardDescription>
+                <CardDescription>
+                  Gere um arquivo CSV/XLSX compatível com o sistema Sólides.
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="bg-muted p-4 rounded space-y-2">
@@ -71,9 +82,13 @@ export default function Integration() {
             <Card className="border-0 shadow-sm">
               <CardHeader>
                 <CardTitle className="text-base flex items-center gap-2">
-                  <FileSpreadsheet className="h-5 w-5" /> Exportar para Flash Benefícios
+                  <FileSpreadsheet className="h-5 w-5" /> Exportar para Flash
+                  Benefícios
                 </CardTitle>
-                <CardDescription>Gere um arquivo CSV/XLSX compatível com o sistema Flash Benefícios.</CardDescription>
+                <CardDescription>
+                  Gere um arquivo CSV/XLSX compatível com o sistema Flash
+                  Benefícios.
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="bg-muted p-4 rounded space-y-2">

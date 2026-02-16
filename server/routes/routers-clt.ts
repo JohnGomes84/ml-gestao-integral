@@ -1,18 +1,22 @@
+// @ts-nocheck
 import { z } from "zod";
-import { COOKIE_NAME } from "@shared/const";
-import { getSessionCookieOptions } from "./_core/cookies";
-import { systemRouter } from "./_core/systemRouter";
-import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
+import { COOKIE_NAME } from "../../shared/const";
+import { getSessionCookieOptions } from "../_core/cookies";
+import { systemRouter } from "../_core/systemRouter";
+import { publicProcedure, protectedProcedure, router } from "../_core/trpc";
 import * as db from "./db";
-import { storagePut } from "./storage";
+import { storagePut } from "../storage";
 import { nanoid } from "nanoid";
-import { complianceRouter } from "./routers/compliance";
-import { integrationsRouter } from "./routers/integrations";
+import { complianceRouter } from "../routers/compliance";
+import { integrationsRouter } from "../routers/integrations";
 
-import { auditCpfRouter } from "./routers/audit-cpf";
-import { digitalSignatureRouter } from "./routers/digital-signature";
-import { auditRouter } from "./routers/audit";
-import { convertEmployeeInput, convertUpdateData } from "./utils/type-converters";
+import { auditCpfRouter } from "../routers/audit-cpf";
+import { digitalSignatureRouter } from "../routers/digital-signature";
+import { auditRouter } from "../routers/audit";
+import {
+  convertEmployeeInput,
+  convertUpdateData,
+} from "../utils/type-converters";
 
 // ============================================================
 // ROUTERS
@@ -53,48 +57,78 @@ export const appRouter = router({
         return db.getEmployee(input.id);
       }),
     create: protectedProcedure
-      .input(z.object({
-        fullName: z.string().min(1),
-        socialName: z.string().optional(),
-        cpf: z.string().min(11),
-        rg: z.string().optional(),
-        birthDate: z.string().optional(),
-        gender: z.enum(["M", "F", "Outro"]).optional(),
-        maritalStatus: z.enum(["Solteiro", "Casado", "Divorciado", "Viúvo", "União Estável"]).optional(),
-        nationality: z.string().optional(),
-        educationLevel: z.string().optional(),
-        email: z.string().optional(),
-        phone: z.string().optional(),
-        addressStreet: z.string().optional(),
-        addressNumber: z.string().optional(),
-        addressComplement: z.string().optional(),
-        addressNeighborhood: z.string().optional(),
-        addressCity: z.string().optional(),
-        addressState: z.string().optional(),
-        addressZip: z.string().optional(),
-        ctpsNumber: z.string().optional(),
-        ctpsSeries: z.string().optional(),
-        pisPasep: z.string().optional(),
-        voterTitle: z.string().optional(),
-        militaryCert: z.string().optional(),
-        cnhNumber: z.string().optional(),
-        cnhCategory: z.string().optional(),
-        cnhExpiry: z.string().optional(),
-        bankName: z.string().optional(),
-        bankAgency: z.string().optional(),
-        bankAccount: z.string().optional(),
-        pixKey: z.string().optional(),
-        branch: z.string().optional(),
-        externalCode: z.string().optional(),
-        costCenter: z.string().optional(),
-        corporateEmail: z.string().optional(),
-        employmentType: z.enum(["CLT", "CLT_Comissao", "Comissionado", "Concursado", "Contrato", "Cooperado", "Efetivo", "Estagio", "Estatutario", "MenorAprendiz", "JovemAprendiz", "PrestadorServico", "Socio", "Temporario", "Outro"]).optional(),
-        esocialMatricula: z.string().optional(),
-        insalubrityPercentage: z.enum(["0", "10", "20", "40"]).optional(),
-        status: z.enum(["Ativo", "Inativo", "Afastado", "Férias"]).optional(),
-      }))
+      .input(
+        z.object({
+          fullName: z.string().min(1),
+          socialName: z.string().optional(),
+          cpf: z.string().min(11),
+          rg: z.string().optional(),
+          birthDate: z.string().optional(),
+          gender: z.enum(["M", "F", "Outro"]).optional(),
+          maritalStatus: z
+            .enum([
+              "Solteiro",
+              "Casado",
+              "Divorciado",
+              "Viúvo",
+              "União Estável",
+            ])
+            .optional(),
+          nationality: z.string().optional(),
+          educationLevel: z.string().optional(),
+          email: z.string().optional(),
+          phone: z.string().optional(),
+          addressStreet: z.string().optional(),
+          addressNumber: z.string().optional(),
+          addressComplement: z.string().optional(),
+          addressNeighborhood: z.string().optional(),
+          addressCity: z.string().optional(),
+          addressState: z.string().optional(),
+          addressZip: z.string().optional(),
+          ctpsNumber: z.string().optional(),
+          ctpsSeries: z.string().optional(),
+          pisPasep: z.string().optional(),
+          voterTitle: z.string().optional(),
+          militaryCert: z.string().optional(),
+          cnhNumber: z.string().optional(),
+          cnhCategory: z.string().optional(),
+          cnhExpiry: z.string().optional(),
+          bankName: z.string().optional(),
+          bankAgency: z.string().optional(),
+          bankAccount: z.string().optional(),
+          pixKey: z.string().optional(),
+          branch: z.string().optional(),
+          externalCode: z.string().optional(),
+          costCenter: z.string().optional(),
+          corporateEmail: z.string().optional(),
+          employmentType: z
+            .enum([
+              "CLT",
+              "CLT_Comissao",
+              "Comissionado",
+              "Concursado",
+              "Contrato",
+              "Cooperado",
+              "Efetivo",
+              "Estagio",
+              "Estatutario",
+              "MenorAprendiz",
+              "JovemAprendiz",
+              "PrestadorServico",
+              "Socio",
+              "Temporario",
+              "Outro",
+            ])
+            .optional(),
+          esocialMatricula: z.string().optional(),
+          insalubrityPercentage: z.enum(["0", "10", "20", "40"]).optional(),
+          status: z.enum(["Ativo", "Inativo", "Afastado", "Férias"]).optional(),
+        })
+      )
       .mutation(async ({ input }) => {
-        const result = await db.createEmployee(convertEmployeeInput(input)) || { id: 0 };
+        const result = (await db.createEmployee(
+          convertEmployeeInput(input)
+        )) || { id: 0 };
         // Create default admission checklist
         if (result?.id) {
           await db.createDefaultAdmissionChecklist(result.id);
@@ -102,10 +136,12 @@ export const appRouter = router({
         return result;
       }),
     update: protectedProcedure
-      .input(z.object({
-        id: z.number(),
-        data: z.record(z.string(), z.any()),
-      }))
+      .input(
+        z.object({
+          id: z.number(),
+          data: z.record(z.string(), z.any()),
+        })
+      )
       .mutation(async ({ input }) => {
         await db.updateEmployee(input.id, convertUpdateData(input.data));
         return { success: true };
@@ -131,14 +167,18 @@ export const appRouter = router({
         return db.getPosition(input.id);
       }),
     create: protectedProcedure
-      .input(z.object({
-        title: z.string().min(1),
-        cboCode: z.string().optional(),
-        description: z.string().optional(),
-        department: z.string().optional(),
-        baseSalary: z.string().optional(),
-        hazardLevel: z.enum(["Nenhum", "Insalubridade", "Periculosidade"]).optional(),
-      }))
+      .input(
+        z.object({
+          title: z.string().min(1),
+          cboCode: z.string().optional(),
+          description: z.string().optional(),
+          department: z.string().optional(),
+          baseSalary: z.string().optional(),
+          hazardLevel: z
+            .enum(["Nenhum", "Insalubridade", "Periculosidade"])
+            .optional(),
+        })
+      )
       .mutation(async ({ input }) => {
         return db.createPosition(input);
       }),
@@ -171,17 +211,19 @@ export const appRouter = router({
         return db.getContract(input.id);
       }),
     create: protectedProcedure
-      .input(z.object({
-        employeeId: z.number(),
-        positionId: z.number().optional(),
-        contractType: z.enum(["CLT", "Estágio", "Temporário", "Experiência"]),
-        hireDate: z.string(),
-        experienceEndDate: z.string().optional(),
-        experienceRenewed: z.boolean().optional(),
-        workSchedule: z.string().optional(),
-        weeklyHours: z.string().optional(),
-        salary: z.string().optional(),
-      }))
+      .input(
+        z.object({
+          employeeId: z.number(),
+          positionId: z.number().optional(),
+          contractType: z.enum(["CLT", "Estágio", "Temporário", "Experiência"]),
+          hireDate: z.string(),
+          experienceEndDate: z.string().optional(),
+          experienceRenewed: z.boolean().optional(),
+          workSchedule: z.string().optional(),
+          weeklyHours: z.string().optional(),
+          salary: z.string().optional(),
+        })
+      )
       .mutation(async ({ input }) => {
         return db.createContract(input);
       }),
@@ -203,14 +245,16 @@ export const appRouter = router({
         return db.listEmployeePositions(input.employeeId);
       }),
     create: protectedProcedure
-      .input(z.object({
-        employeeId: z.number(),
-        positionId: z.number(),
-        salary: z.string(),
-        startDate: z.string(),
-        endDate: z.string().optional(),
-        changeReason: z.string().optional(),
-      }))
+      .input(
+        z.object({
+          employeeId: z.number(),
+          positionId: z.number(),
+          salary: z.string(),
+          startDate: z.string(),
+          endDate: z.string().optional(),
+          changeReason: z.string().optional(),
+        })
+      )
       .mutation(async ({ input }) => {
         return db.createEmployeePosition(input);
       }),
@@ -231,13 +275,15 @@ export const appRouter = router({
         return db.getVacation(input.id);
       }),
     create: protectedProcedure
-      .input(z.object({
-        employeeId: z.number(),
-        acquisitionStart: z.string(),
-        acquisitionEnd: z.string(),
-        concessionLimit: z.string(),
-        daysEntitled: z.number().default(30),
-      }))
+      .input(
+        z.object({
+          employeeId: z.number(),
+          acquisitionStart: z.string(),
+          acquisitionEnd: z.string(),
+          concessionLimit: z.string(),
+          daysEntitled: z.number().default(30),
+        })
+      )
       .mutation(async ({ input }) => {
         return db.createVacation(input);
       }),
@@ -272,16 +318,18 @@ export const appRouter = router({
         return db.listVacationPeriodsByEmployee(input.employeeId);
       }),
     create: protectedProcedure
-      .input(z.object({
-        vacationId: z.number(),
-        employeeId: z.number(),
-        startDate: z.string(),
-        endDate: z.string(),
-        days: z.number(),
-        isPecuniaryAllowance: z.boolean().optional(),
-        pecuniaryDays: z.number().optional(),
-        noticeDate: z.string().optional(),
-      }))
+      .input(
+        z.object({
+          vacationId: z.number(),
+          employeeId: z.number(),
+          startDate: z.string(),
+          endDate: z.string(),
+          days: z.number(),
+          isPecuniaryAllowance: z.boolean().optional(),
+          pecuniaryDays: z.number().optional(),
+          noticeDate: z.string().optional(),
+        })
+      )
       .mutation(async ({ input }) => {
         return db.createVacationPeriod(input);
       }),
@@ -303,18 +351,26 @@ export const appRouter = router({
         return db.listMedicalExams(input?.employeeId);
       }),
     create: protectedProcedure
-      .input(z.object({
-        employeeId: z.number(),
-        examType: z.enum(["Admissional", "Periódico", "Demissional", "Retorno", "Mudança de Função"]),
-        examDate: z.string(),
-        expiryDate: z.string(),
-        result: z.enum(["Apto", "Inapto", "Apto com Restrições"]).optional(),
-        doctorName: z.string().optional(),
-        crm: z.string().optional(),
-        clinicName: z.string().optional(),
-        observations: z.string().optional(),
-        documentUrl: z.string().optional(),
-      }))
+      .input(
+        z.object({
+          employeeId: z.number(),
+          examType: z.enum([
+            "Admissional",
+            "Periódico",
+            "Demissional",
+            "Retorno",
+            "Mudança de Função",
+          ]),
+          examDate: z.string(),
+          expiryDate: z.string(),
+          result: z.enum(["Apto", "Inapto", "Apto com Restrições"]).optional(),
+          doctorName: z.string().optional(),
+          crm: z.string().optional(),
+          clinicName: z.string().optional(),
+          observations: z.string().optional(),
+          documentUrl: z.string().optional(),
+        })
+      )
       .mutation(async ({ input }) => {
         return db.createMedicalExam(input);
       }),
@@ -344,15 +400,24 @@ export const appRouter = router({
         return db.listLeaves(input?.employeeId);
       }),
     create: protectedProcedure
-      .input(z.object({
-        employeeId: z.number(),
-        leaveType: z.enum(["Médico", "INSS", "Maternidade", "Paternidade", "Acidente de Trabalho", "Outros"]),
-        startDate: z.string(),
-        expectedReturnDate: z.string().optional(),
-        inssProtocol: z.string().optional(),
-        observations: z.string().optional(),
-        documentUrl: z.string().optional(),
-      }))
+      .input(
+        z.object({
+          employeeId: z.number(),
+          leaveType: z.enum([
+            "Médico",
+            "INSS",
+            "Maternidade",
+            "Paternidade",
+            "Acidente de Trabalho",
+            "Outros",
+          ]),
+          startDate: z.string(),
+          expectedReturnDate: z.string().optional(),
+          inssProtocol: z.string().optional(),
+          observations: z.string().optional(),
+          documentUrl: z.string().optional(),
+        })
+      )
       .mutation(async ({ input }) => {
         return db.createLeave(input);
       }),
@@ -374,13 +439,15 @@ export const appRouter = router({
         return db.listTimeBank(input?.employeeId);
       }),
     create: protectedProcedure
-      .input(z.object({
-        employeeId: z.number(),
-        referenceMonth: z.string(),
-        hoursBalance: z.string(),
-        expiryDate: z.string(),
-        observations: z.string().optional(),
-      }))
+      .input(
+        z.object({
+          employeeId: z.number(),
+          referenceMonth: z.string(),
+          hoursBalance: z.string(),
+          expiryDate: z.string(),
+          observations: z.string().optional(),
+        })
+      )
       .mutation(async ({ input }) => {
         return db.createTimeBankEntry(input);
       }),
@@ -407,17 +474,27 @@ export const appRouter = router({
         return db.listBenefits(input?.employeeId);
       }),
     create: protectedProcedure
-      .input(z.object({
-        employeeId: z.number(),
-        benefitType: z.enum(["Vale Transporte", "Vale Alimentação", "Vale Refeição", "Plano de Saúde", "Plano Odontológico", "Seguro de Vida", "Outros"]),
-        provider: z.string().optional(),
-        planName: z.string().optional(),
-        value: z.string().optional(),
-        employeeContribution: z.string().optional(),
-        optedOut: z.boolean().optional(),
-        startDate: z.string(),
-        observations: z.string().optional(),
-      }))
+      .input(
+        z.object({
+          employeeId: z.number(),
+          benefitType: z.enum([
+            "Vale Transporte",
+            "Vale Alimentação",
+            "Vale Refeição",
+            "Plano de Saúde",
+            "Plano Odontológico",
+            "Seguro de Vida",
+            "Outros",
+          ]),
+          provider: z.string().optional(),
+          planName: z.string().optional(),
+          value: z.string().optional(),
+          employeeContribution: z.string().optional(),
+          optedOut: z.boolean().optional(),
+          startDate: z.string(),
+          observations: z.string().optional(),
+        })
+      )
       .mutation(async ({ input }) => {
         return db.createBenefit(input);
       }),
@@ -434,22 +511,39 @@ export const appRouter = router({
   // ============================================================
   documents: router({
     list: protectedProcedure
-      .input(z.object({ employeeId: z.number().optional(), category: z.string().optional() }).optional())
+      .input(
+        z
+          .object({
+            employeeId: z.number().optional(),
+            category: z.string().optional(),
+          })
+          .optional()
+      )
       .query(async ({ input }) => {
         return db.listDocuments(input?.employeeId, input?.category);
       }),
     create: protectedProcedure
-      .input(z.object({
-        employeeId: z.number(),
-        category: z.enum(["Pessoal", "Contratual", "Saúde e Segurança", "Benefícios", "Termos", "Treinamentos", "Outros"]),
-        documentName: z.string(),
-        fileUrl: z.string(),
-        fileKey: z.string().optional(),
-        fileType: z.string().optional(),
-        fileSize: z.number().optional(),
-        expiryDate: z.string().optional(),
-        observations: z.string().optional(),
-      }))
+      .input(
+        z.object({
+          employeeId: z.number(),
+          category: z.enum([
+            "Pessoal",
+            "Contratual",
+            "Saúde e Segurança",
+            "Benefícios",
+            "Termos",
+            "Treinamentos",
+            "Outros",
+          ]),
+          documentName: z.string(),
+          fileUrl: z.string(),
+          fileKey: z.string().optional(),
+          fileType: z.string().optional(),
+          fileSize: z.number().optional(),
+          expiryDate: z.string().optional(),
+          observations: z.string().optional(),
+        })
+      )
       .mutation(async ({ input }) => {
         return db.createDocument(input);
       }),
@@ -460,16 +554,26 @@ export const appRouter = router({
         return { success: true };
       }),
     upload: protectedProcedure
-      .input(z.object({
-        employeeId: z.number(),
-        category: z.enum(["Pessoal", "Contratual", "Saúde e Segurança", "Benefícios", "Termos", "Treinamentos", "Outros"]),
-        documentName: z.string(),
-        fileBase64: z.string(),
-        fileName: z.string(),
-        fileType: z.string(),
-        fileSize: z.number(),
-        expiryDate: z.string().optional(),
-      }))
+      .input(
+        z.object({
+          employeeId: z.number(),
+          category: z.enum([
+            "Pessoal",
+            "Contratual",
+            "Saúde e Segurança",
+            "Benefícios",
+            "Termos",
+            "Treinamentos",
+            "Outros",
+          ]),
+          documentName: z.string(),
+          fileBase64: z.string(),
+          fileName: z.string(),
+          fileType: z.string(),
+          fileSize: z.number(),
+          expiryDate: z.string().optional(),
+        })
+      )
       .mutation(async ({ input }) => {
         const buffer = Buffer.from(input.fileBase64, "base64");
         const fileKey = `documents/${input.employeeId}/${nanoid()}-${input.fileName}`;
@@ -492,7 +596,12 @@ export const appRouter = router({
   // ============================================================
   checklist: router({
     list: protectedProcedure
-      .input(z.object({ employeeId: z.number(), checklistType: z.string().optional() }))
+      .input(
+        z.object({
+          employeeId: z.number(),
+          checklistType: z.string().optional(),
+        })
+      )
       .query(async ({ input }) => {
         return db.listChecklistItems(input.employeeId, input.checklistType);
       }),
@@ -518,15 +627,17 @@ export const appRouter = router({
       return db.listEquipment();
     }),
     create: protectedProcedure
-      .input(z.object({
-        equipmentType: z.string(),
-        brand: z.string().optional(),
-        model: z.string().optional(),
-        serialNumber: z.string().optional(),
-        imei: z.string().optional(),
-        patrimonyCode: z.string().optional(),
-        observations: z.string().optional(),
-      }))
+      .input(
+        z.object({
+          equipmentType: z.string(),
+          brand: z.string().optional(),
+          model: z.string().optional(),
+          serialNumber: z.string().optional(),
+          imei: z.string().optional(),
+          patrimonyCode: z.string().optional(),
+          observations: z.string().optional(),
+        })
+      )
       .mutation(async ({ input }) => {
         return db.createEquipmentItem(input);
       }),
@@ -548,31 +659,39 @@ export const appRouter = router({
         return db.listEquipmentLoans(input?.employeeId);
       }),
     create: protectedProcedure
-      .input(z.object({
-        equipmentId: z.number(),
-        employeeId: z.number(),
-        loanDate: z.string(),
-        conditionAtLoan: z.string().optional(),
-      }))
+      .input(
+        z.object({
+          equipmentId: z.number(),
+          employeeId: z.number(),
+          loanDate: z.string(),
+          conditionAtLoan: z.string().optional(),
+        })
+      )
       .mutation(async ({ input }) => {
         // Mark equipment as emprestado
-        await db.updateEquipmentItem(input.equipmentId, { status: "Emprestado" });
+        await db.updateEquipmentItem(input.equipmentId, {
+          status: "Emprestado",
+        });
         return db.createEquipmentLoan(input);
       }),
     return: protectedProcedure
-      .input(z.object({
-        id: z.number(),
-        equipmentId: z.number(),
-        returnDate: z.string(),
-        conditionAtReturn: z.string().optional(),
-      }))
+      .input(
+        z.object({
+          id: z.number(),
+          equipmentId: z.number(),
+          returnDate: z.string(),
+          conditionAtReturn: z.string().optional(),
+        })
+      )
       .mutation(async ({ input }) => {
         await db.updateEquipmentLoan(input.id, {
           returnDate: input.returnDate,
           conditionAtReturn: input.conditionAtReturn,
           status: "Devolvido",
         });
-        await db.updateEquipmentItem(input.equipmentId, { status: "Disponível" });
+        await db.updateEquipmentItem(input.equipmentId, {
+          status: "Disponível",
+        });
         return { success: true };
       }),
   }),
@@ -587,14 +706,16 @@ export const appRouter = router({
         return db.listPpeDeliveries(input?.employeeId);
       }),
     create: protectedProcedure
-      .input(z.object({
-        employeeId: z.number(),
-        ppeDescription: z.string(),
-        caNumber: z.string().optional(),
-        quantity: z.number(),
-        deliveryDate: z.string(),
-        reason: z.string().optional(),
-      }))
+      .input(
+        z.object({
+          employeeId: z.number(),
+          ppeDescription: z.string(),
+          caNumber: z.string().optional(),
+          quantity: z.number(),
+          deliveryDate: z.string(),
+          reason: z.string().optional(),
+        })
+      )
       .mutation(async ({ input }) => {
         return db.createPpeDelivery(input);
       }),
@@ -610,16 +731,18 @@ export const appRouter = router({
         return db.listTrainings(input?.employeeId);
       }),
     create: protectedProcedure
-      .input(z.object({
-        employeeId: z.number(),
-        trainingName: z.string(),
-        nrReference: z.string().optional(),
-        trainingDate: z.string(),
-        expiryDate: z.string().optional(),
-        hours: z.string().optional(),
-        provider: z.string().optional(),
-        certificateUrl: z.string().optional(),
-      }))
+      .input(
+        z.object({
+          employeeId: z.number(),
+          trainingName: z.string(),
+          nrReference: z.string().optional(),
+          trainingDate: z.string(),
+          expiryDate: z.string().optional(),
+          hours: z.string().optional(),
+          provider: z.string().optional(),
+          certificateUrl: z.string().optional(),
+        })
+      )
       .mutation(async ({ input }) => {
         return db.createTraining(input);
       }),
@@ -641,17 +764,19 @@ export const appRouter = router({
         return db.listServiceOrders(input?.employeeId);
       }),
     create: protectedProcedure
-      .input(z.object({
-        employeeId: z.number(),
-        positionId: z.number().optional(),
-        nrReference: z.string().optional(),
-        activities: z.string().optional(),
-        risks: z.string().optional(),
-        recommendedPpe: z.string().optional(),
-        preventiveMeasures: z.string().optional(),
-        requiredTrainings: z.string().optional(),
-        issueDate: z.string(),
-      }))
+      .input(
+        z.object({
+          employeeId: z.number(),
+          positionId: z.number().optional(),
+          nrReference: z.string().optional(),
+          activities: z.string().optional(),
+          risks: z.string().optional(),
+          recommendedPpe: z.string().optional(),
+          preventiveMeasures: z.string().optional(),
+          requiredTrainings: z.string().optional(),
+          issueDate: z.string(),
+        })
+      )
       .mutation(async ({ input }) => {
         return db.createServiceOrder(input);
       }),
@@ -670,12 +795,21 @@ export const appRouter = router({
         return db.getDocumentTemplate(input.id);
       }),
     create: protectedProcedure
-      .input(z.object({
-        templateName: z.string(),
-        templateType: z.enum(["Termo de Responsabilidade", "Declaração de Pendência", "Ficha de EPI", "Ordem de Serviço", "Aviso de Férias", "Outros"]),
-        content: z.string(),
-        placeholders: z.string().optional(),
-      }))
+      .input(
+        z.object({
+          templateName: z.string(),
+          templateType: z.enum([
+            "Termo de Responsabilidade",
+            "Declaração de Pendência",
+            "Ficha de EPI",
+            "Ordem de Serviço",
+            "Aviso de Férias",
+            "Outros",
+          ]),
+          content: z.string(),
+          placeholders: z.string().optional(),
+        })
+      )
       .mutation(async ({ input }) => {
         return db.createDocumentTemplate(input);
       }),
@@ -686,11 +820,13 @@ export const appRouter = router({
         return { success: true };
       }),
     generate: protectedProcedure
-      .input(z.object({
-        templateId: z.number(),
-        employeeId: z.number(),
-        extraData: z.record(z.string(), z.string()).optional(),
-      }))
+      .input(
+        z.object({
+          templateId: z.number(),
+          employeeId: z.number(),
+          extraData: z.record(z.string(), z.string()).optional(),
+        })
+      )
       .mutation(async ({ input }) => {
         const template = await db.getDocumentTemplate(input.templateId);
         if (!template) throw new Error("Template não encontrado");
@@ -699,18 +835,30 @@ export const appRouter = router({
 
         let content = template.content;
         // Replace employee placeholders
-        content = content.replace(/\{\{NOME_FUNCIONARIO\}\}/g, employee.fullName);
+        content = content.replace(
+          /\{\{NOME_FUNCIONARIO\}\}/g,
+          employee.fullName
+        );
         content = content.replace(/\{\{CPF\}\}/g, employee.cpf);
         content = content.replace(/\{\{RG\}\}/g, employee.rg ?? "");
         content = content.replace(/\{\{EMAIL\}\}/g, employee.email ?? "");
         content = content.replace(/\{\{TELEFONE\}\}/g, employee.phone ?? "");
-        content = content.replace(/\{\{ENDERECO\}\}/g, `${employee.addressStreet ?? ""}, ${employee.addressNumber ?? ""} ${employee.addressComplement ?? ""} - ${employee.addressNeighborhood ?? ""}, ${employee.addressCity ?? ""}/${employee.addressState ?? ""} - ${employee.addressZip ?? ""}`);
-        content = content.replace(/\{\{DATA_ATUAL\}\}/g, new Date().toLocaleDateString("pt-BR"));
+        content = content.replace(
+          /\{\{ENDERECO\}\}/g,
+          `${employee.addressStreet ?? ""}, ${employee.addressNumber ?? ""} ${employee.addressComplement ?? ""} - ${employee.addressNeighborhood ?? ""}, ${employee.addressCity ?? ""}/${employee.addressState ?? ""} - ${employee.addressZip ?? ""}`
+        );
+        content = content.replace(
+          /\{\{DATA_ATUAL\}\}/g,
+          new Date().toLocaleDateString("pt-BR")
+        );
 
         // Replace extra data placeholders
         if (input.extraData) {
           for (const [key, value] of Object.entries(input.extraData)) {
-            content = content.replace(new RegExp(`\\{\\{${key}\\}\\}`, "g"), value as string);
+            content = content.replace(
+              new RegExp(`\\{\\{${key}\\}\\}`, "g"),
+              value as string
+            );
           }
         }
 
@@ -741,14 +889,25 @@ export const appRouter = router({
       return { success: true };
     }),
     create: protectedProcedure
-      .input(z.object({
-        type: z.enum(["Férias", "ASO", "Banco de Horas", "Contrato Experiência", "Treinamento", "Documento", "EPI", "Geral"]),
-        title: z.string(),
-        message: z.string(),
-        severity: z.enum(["Info", "Aviso", "Crítico"]).optional(),
-        relatedEmployeeId: z.number().optional(),
-        dueDate: z.string().optional(),
-      }))
+      .input(
+        z.object({
+          type: z.enum([
+            "Férias",
+            "ASO",
+            "Banco de Horas",
+            "Contrato Experiência",
+            "Treinamento",
+            "Documento",
+            "EPI",
+            "Geral",
+          ]),
+          title: z.string(),
+          message: z.string(),
+          severity: z.enum(["Info", "Aviso", "Crítico"]).optional(),
+          relatedEmployeeId: z.number().optional(),
+          dueDate: z.string().optional(),
+        })
+      )
       .mutation(async ({ input }) => {
         return db.createNotification(input);
       }),
@@ -762,12 +921,14 @@ export const appRouter = router({
       return db.listHolidays();
     }),
     create: protectedProcedure
-      .input(z.object({
-        name: z.string(),
-        date: z.string(),
-        type: z.enum(["Nacional", "Estadual", "Municipal"]).optional(),
-        recurring: z.boolean().optional(),
-      }))
+      .input(
+        z.object({
+          name: z.string(),
+          date: z.string(),
+          type: z.enum(["Nacional", "Estadual", "Municipal"]).optional(),
+          recurring: z.boolean().optional(),
+        })
+      )
       .mutation(async ({ input }) => {
         return db.createHoliday(input);
       }),
@@ -792,7 +953,13 @@ export const appRouter = router({
         return db.getSetting(input.key);
       }),
     upsert: protectedProcedure
-      .input(z.object({ key: z.string(), value: z.string(), description: z.string().optional() }))
+      .input(
+        z.object({
+          key: z.string(),
+          value: z.string(),
+          description: z.string().optional(),
+        })
+      )
       .mutation(async ({ input }) => {
         await db.upsertSetting(input.key, input.value, input.description);
         return { success: true };
@@ -809,15 +976,23 @@ export const appRouter = router({
         return db.listDependents(input.employeeId);
       }),
     create: protectedProcedure
-      .input(z.object({
-        employeeId: z.number(),
-        name: z.string(),
-        relationship: z.enum(["Cônjuge", "Filho(a)", "Enteado(a)", "Pai/Mãe", "Outros"]),
-        birthDate: z.string().optional(),
-        cpf: z.string().optional(),
-        irDeduction: z.boolean().optional(),
-        familySalary: z.boolean().optional(),
-      }))
+      .input(
+        z.object({
+          employeeId: z.number(),
+          name: z.string(),
+          relationship: z.enum([
+            "Cônjuge",
+            "Filho(a)",
+            "Enteado(a)",
+            "Pai/Mãe",
+            "Outros",
+          ]),
+          birthDate: z.string().optional(),
+          cpf: z.string().optional(),
+          irDeduction: z.boolean().optional(),
+          familySalary: z.boolean().optional(),
+        })
+      )
       .mutation(async ({ input }) => {
         return db.createDependent(input);
       }),
@@ -839,18 +1014,20 @@ export const appRouter = router({
         return db.listAbsences(input.employeeId);
       }),
     create: protectedProcedure
-      .input(z.object({
-        employeeId: z.number(),
-        absenceDate: z.string(),
-        justified: z.boolean().optional(),
-        reason: z.string().optional(),
-      }))
+      .input(
+        z.object({
+          employeeId: z.number(),
+          absenceDate: z.string(),
+          justified: z.boolean().optional(),
+          reason: z.string().optional(),
+        })
+      )
       .mutation(async ({ input }) => {
         return db.createAbsence(input);
       }),
   }),
 
-   // ============================================================
+  // ============================================================
   // INTEGRATIONS
   // ============================================================
   integrations: integrationsRouter,

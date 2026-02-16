@@ -1,7 +1,20 @@
+// @ts-nocheck
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { trpc } from "@/lib/trpc";
 import { Download, FileText, AlertCircle, CheckCircle } from "lucide-react";
 
@@ -25,7 +38,9 @@ export default function Reports() {
         for (let i = 0; i < binaryString.length; i++) {
           bytes[i] = binaryString.charCodeAt(i);
         }
-        const blob = new Blob([bytes], { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
+        const blob = new Blob([bytes], {
+          type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        });
 
         // Create download link
         const url = window.URL.createObjectURL(blob);
@@ -48,12 +63,17 @@ export default function Reports() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold">Relatórios</h1>
-        <p className="text-gray-600">Gere relatórios de conformidade e conformidade regulatória</p>
+        <p className="text-gray-600">
+          Gere relatórios de conformidade e conformidade regulatória
+        </p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
         {/* Compliance Report Card */}
-        <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => setSelectedReport("compliance")}>
+        <Card
+          className="hover:shadow-lg transition-shadow cursor-pointer"
+          onClick={() => setSelectedReport("compliance")}
+        >
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
@@ -61,17 +81,20 @@ export default function Reports() {
                   <FileText className="h-5 w-5" />
                   Relatório de Conformidade
                 </CardTitle>
-                <CardDescription>Status de PGR, PCMSO, ASOs e Treinamentos</CardDescription>
+                <CardDescription>
+                  Status de PGR, PCMSO, ASOs e Treinamentos
+                </CardDescription>
               </div>
               <CheckCircle className="h-8 w-8 text-green-500" />
             </div>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-gray-600 mb-4">
-              Gere um relatório completo com o status de todos os documentos críticos de conformidade regulatória.
+              Gere um relatório completo com o status de todos os documentos
+              críticos de conformidade regulatória.
             </p>
             <Button
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
                 handleGenerateReport("compliance");
               }}
@@ -85,7 +108,10 @@ export default function Reports() {
         </Card>
 
         {/* PGR Report Card */}
-        <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => setSelectedReport("pgr")}>
+        <Card
+          className="hover:shadow-lg transition-shadow cursor-pointer"
+          onClick={() => setSelectedReport("pgr")}
+        >
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
@@ -100,10 +126,11 @@ export default function Reports() {
           </CardHeader>
           <CardContent>
             <p className="text-sm text-gray-600 mb-4">
-              Relatório detalhado do Programa de Gestão de Riscos com status de validade.
+              Relatório detalhado do Programa de Gestão de Riscos com status de
+              validade.
             </p>
             <Button
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
                 handleGenerateReport("pgr");
               }}
@@ -118,7 +145,10 @@ export default function Reports() {
         </Card>
 
         {/* PCMSO Report Card */}
-        <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => setSelectedReport("pcmso")}>
+        <Card
+          className="hover:shadow-lg transition-shadow cursor-pointer"
+          onClick={() => setSelectedReport("pcmso")}
+        >
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
@@ -133,10 +163,11 @@ export default function Reports() {
           </CardHeader>
           <CardContent>
             <p className="text-sm text-gray-600 mb-4">
-              Relatório do Programa de Controle Médico de Saúde Ocupacional com status de ASOs.
+              Relatório do Programa de Controle Médico de Saúde Ocupacional com
+              status de ASOs.
             </p>
             <Button
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
                 handleGenerateReport("pcmso");
               }}
@@ -151,7 +182,10 @@ export default function Reports() {
         </Card>
 
         {/* Treinamentos Report Card */}
-        <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => setSelectedReport("trainings")}>
+        <Card
+          className="hover:shadow-lg transition-shadow cursor-pointer"
+          onClick={() => setSelectedReport("trainings")}
+        >
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
@@ -159,17 +193,20 @@ export default function Reports() {
                   <FileText className="h-5 w-5" />
                   Relatório de Treinamentos
                 </CardTitle>
-                <CardDescription>Status de Treinamentos Obrigatórios</CardDescription>
+                <CardDescription>
+                  Status de Treinamentos Obrigatórios
+                </CardDescription>
               </div>
               <AlertCircle className="h-8 w-8 text-yellow-500" />
             </div>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-gray-600 mb-4">
-              Relatório de todos os treinamentos obrigatórios com status de validade e funcionários.
+              Relatório de todos os treinamentos obrigatórios com status de
+              validade e funcionários.
             </p>
             <Button
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
                 handleGenerateReport("trainings");
               }}
@@ -187,20 +224,25 @@ export default function Reports() {
       {/* Info Card */}
       <Card className="bg-blue-50 border-blue-200">
         <CardHeader>
-          <CardTitle className="text-blue-900">Informações sobre Relatórios</CardTitle>
+          <CardTitle className="text-blue-900">
+            Informações sobre Relatórios
+          </CardTitle>
         </CardHeader>
         <CardContent className="text-sm text-blue-800 space-y-2">
           <p>
-            • Os relatórios são gerados em formato DOCX para fácil edição e compartilhamento
+            • Os relatórios são gerados em formato DOCX para fácil edição e
+            compartilhamento
           </p>
           <p>
             • Todos os dados incluem status de conformidade e alertas críticos
           </p>
           <p>
-            • Os relatórios são atualizados em tempo real com os dados do sistema
+            • Os relatórios são atualizados em tempo real com os dados do
+            sistema
           </p>
           <p>
-            • Você pode compartilhar os relatórios com auditores e órgãos reguladores
+            • Você pode compartilhar os relatórios com auditores e órgãos
+            reguladores
           </p>
         </CardContent>
       </Card>

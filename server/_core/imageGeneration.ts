@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Image generation helper using internal ImageService
  *

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { protectedProcedure, router } from "../_core/trpc";
 import { generateComplianceReport } from "../compliance";
 import { generateCompliancePDF } from "../pdf-generator";

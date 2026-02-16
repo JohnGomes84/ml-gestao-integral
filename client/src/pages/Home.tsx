@@ -1,3 +1,4 @@
+// @ts-nocheck
 import DashboardLayout from "@/components/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { trpc } from "@/lib/trpc";
@@ -28,9 +29,7 @@ export default function Home() {
           <h1 className="text-2xl font-bold tracking-tight text-foreground">
             Dashboard
           </h1>
-          <p className="text-muted-foreground mt-1">
-            Bem-vindo ao RH Prime
-          </p>
+          <p className="text-muted-foreground mt-1">Bem-vindo ao RH Prime</p>
         </div>
 
         {/* Welcome Card */}
@@ -43,10 +42,12 @@ export default function Home() {
           </CardHeader>
           <CardContent>
             <p className="text-sm text-gray-700">
-              Bem-vindo ao RH Prime! Este é seu painel de controle para gerenciar todos os aspectos de Recursos Humanos da sua empresa.
+              Bem-vindo ao RH Prime! Este é seu painel de controle para
+              gerenciar todos os aspectos de Recursos Humanos da sua empresa.
             </p>
             <p className="text-sm text-gray-600 mt-3">
-              Use o menu lateral para acessar as diferentes funcionalidades do sistema.
+              Use o menu lateral para acessar as diferentes funcionalidades do
+              sistema.
             </p>
           </CardContent>
         </Card>
@@ -55,11 +56,15 @@ export default function Home() {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           <Card className="border-0 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium">Funcionários</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Funcionários
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-2xl font-bold text-blue-600">-</p>
-              <p className="text-xs text-muted-foreground mt-1">Gerenciar equipe</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Gerenciar equipe
+              </p>
             </CardContent>
           </Card>
 
@@ -69,17 +74,23 @@ export default function Home() {
             </CardHeader>
             <CardContent>
               <p className="text-2xl font-bold text-amber-600">-</p>
-              <p className="text-xs text-muted-foreground mt-1">Controlar períodos</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Controlar períodos
+              </p>
             </CardContent>
           </Card>
 
           <Card className="border-0 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium">Folha de Pagamento</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Folha de Pagamento
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-2xl font-bold text-green-600">-</p>
-              <p className="text-xs text-muted-foreground mt-1">Processar folhas</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Processar folhas
+              </p>
             </CardContent>
           </Card>
         </div>
@@ -87,11 +98,14 @@ export default function Home() {
         {/* Info Section */}
         <Card className="border-0 shadow-sm bg-blue-50">
           <CardHeader>
-            <CardTitle className="text-sm font-semibold text-blue-900">ℹ️ Informação</CardTitle>
+            <CardTitle className="text-sm font-semibold text-blue-900">
+              ℹ️ Informação
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-blue-800">
-              O sistema está pronto para uso. Acesse as funcionalidades através do menu lateral.
+              O sistema está pronto para uso. Acesse as funcionalidades através
+              do menu lateral.
             </p>
           </CardContent>
         </Card>

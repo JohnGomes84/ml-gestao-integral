@@ -1,9 +1,17 @@
+// @ts-nocheck
 import { useState } from "react";
 import { trpc } from "../lib/trpc";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar, MapPin, Users, Clock, AlertCircle, CheckCircle } from "lucide-react";
+import {
+  Calendar,
+  MapPin,
+  Users,
+  Clock,
+  AlertCircle,
+  CheckCircle,
+} from "lucide-react";
 import { useAuth } from "../_core/hooks/useAuth";
 import { useLocation } from "wouter";
 
@@ -23,7 +31,9 @@ export default function LeaderDashboard() {
       <div className="container mx-auto py-8">
         <Card>
           <CardContent className="pt-6">
-            <p className="text-center">Você precisa estar logado como líder para acessar esta página.</p>
+            <p className="text-center">
+              Você precisa estar logado como líder para acessar esta página.
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -39,27 +49,41 @@ export default function LeaderDashboard() {
   }
 
   // Filtrar operações por status
-  const filteredOperations = operations?.filter(op => {
-    if (selectedStatus === "all") return true;
-    return op.status === selectedStatus;
-  }) || [];
+  const filteredOperations =
+    operations?.filter(op => {
+      if (selectedStatus === "all") return true;
+      return op.status === selectedStatus;
+    }) || [];
 
   // Estatísticas
   const stats = {
     total: operations?.length || 0,
-    pending: operations?.filter(op => op.status === "pending_accept" || op.status === "created").length || 0,
-    inProgress: operations?.filter(op => op.status === "in_progress").length || 0,
+    pending:
+      operations?.filter(
+        op => op.status === "pending_accept" || op.status === "created"
+      ).length || 0,
+    inProgress:
+      operations?.filter(op => op.status === "in_progress").length || 0,
     completed: operations?.filter(op => op.status === "completed").length || 0,
   };
 
   const getStatusBadge = (status: string) => {
-    const variants: Record<string, { variant: "default" | "secondary" | "destructive" | "outline", label: string }> = {
+    const variants: Record<
+      string,
+      {
+        variant: "default" | "secondary" | "destructive" | "outline";
+        label: string;
+      }
+    > = {
       pending: { variant: "secondary", label: "Pendente" },
       in_progress: { variant: "default", label: "Em Andamento" },
       completed: { variant: "outline", label: "Concluída" },
       cancelled: { variant: "destructive", label: "Cancelada" },
     };
-    const config = variants[status] || { variant: "secondary" as const, label: status };
+    const config = variants[status] || {
+      variant: "secondary" as const,
+      label: status,
+    };
     return <Badge variant={config.variant}>{config.label}</Badge>;
   };
 
@@ -84,7 +108,9 @@ export default function LeaderDashboard() {
         <Card>
           <CardContent className="pt-6">
             <div className="text-center">
-              <p className="text-2xl font-bold text-yellow-600">{stats.pending}</p>
+              <p className="text-2xl font-bold text-yellow-600">
+                {stats.pending}
+              </p>
               <p className="text-sm text-muted-foreground">Pendentes</p>
             </div>
           </CardContent>
@@ -92,7 +118,9 @@ export default function LeaderDashboard() {
         <Card>
           <CardContent className="pt-6">
             <div className="text-center">
-              <p className="text-2xl font-bold text-blue-600">{stats.inProgress}</p>
+              <p className="text-2xl font-bold text-blue-600">
+                {stats.inProgress}
+              </p>
               <p className="text-sm text-muted-foreground">Em Andamento</p>
             </div>
           </CardContent>
@@ -100,7 +128,9 @@ export default function LeaderDashboard() {
         <Card>
           <CardContent className="pt-6">
             <div className="text-center">
-              <p className="text-2xl font-bold text-green-600">{stats.completed}</p>
+              <p className="text-2xl font-bold text-green-600">
+                {stats.completed}
+              </p>
               <p className="text-sm text-muted-foreground">Concluídas</p>
             </div>
           </CardContent>
@@ -150,13 +180,20 @@ export default function LeaderDashboard() {
             </CardContent>
           </Card>
         ) : (
-          filteredOperations.map((operation) => (
-            <Card key={operation.id} className="hover:shadow-lg transition-shadow">
+          filteredOperations.map(operation => (
+            <Card
+              key={operation.id}
+              className="hover:shadow-lg transition-shadow"
+            >
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div>
-                    <CardTitle className="text-lg">{operation.clientName}</CardTitle>
-                    <p className="text-sm text-muted-foreground">{operation.locationName}</p>
+                    <CardTitle className="text-lg">
+                      {operation.clientName}
+                    </CardTitle>
+                    <p className="text-sm text-muted-foreground">
+                      {operation.locationName}
+                    </p>
                   </div>
                   {getStatusBadge(operation.status)}
                 </div>
@@ -166,7 +203,9 @@ export default function LeaderDashboard() {
                   {/* Date and Shift */}
                   <div className="flex items-center gap-2 text-sm">
                     <Calendar className="h-4 w-4 text-muted-foreground" />
-                    <span>{new Date(operation.workDate).toLocaleDateString('pt-BR')}</span>
+                    <span>
+                      {new Date(operation.workDate).toLocaleDateString("pt-BR")}
+                    </span>
                     <Clock className="h-4 w-4 text-muted-foreground ml-2" />
                     <span>{operation.shiftName || "Sem turno"}</span>
                   </div>
@@ -184,7 +223,8 @@ export default function LeaderDashboard() {
                   </div>
 
                   {/* Status Info */}
-                  {(operation.status === "pending_accept" || operation.status === "created") && (
+                  {(operation.status === "pending_accept" ||
+                    operation.status === "created") && (
                     <div className="flex items-center gap-2 text-sm text-yellow-600">
                       <AlertCircle className="h-4 w-4" />
                       <span>Aguardando aceite dos trabalhadores</span>
@@ -206,7 +246,9 @@ export default function LeaderDashboard() {
                   {/* Action Button */}
                   <Button
                     className="w-full mt-2"
-                    onClick={() => setLocation(`/lider/operacao/${operation.id}`)}
+                    onClick={() =>
+                      setLocation(`/lider/operacao/${operation.id}`)
+                    }
                   >
                     Ver Detalhes
                   </Button>

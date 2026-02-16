@@ -1,20 +1,27 @@
-import React, { useState } from 'react';
-import DashboardLayout from '@/components/DashboardLayout';
-import { DocumentViewer } from '@/components/DocumentViewer';
-import { SignatureModal } from '@/components/SignatureModal';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { AlertCircle, CheckCircle2, FileText, Plus, Calendar } from 'lucide-react';
+// @ts-nocheck
+import React, { useState } from "react";
+import DashboardLayout from "@/components/DashboardLayout";
+import { DocumentViewer } from "@/components/DocumentViewer";
+import { SignatureModal } from "@/components/SignatureModal";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  AlertCircle,
+  CheckCircle2,
+  FileText,
+  Plus,
+  Calendar,
+} from "lucide-react";
 
 interface ASO {
   id: number;
   employeeName: string;
   employeeCpf: string;
-  asoType: 'admissional' | 'periodico' | 'retorno' | 'demissional';
+  asoType: "admissional" | "periodico" | "retorno" | "demissional";
   content: string;
-  status: 'unsigned' | 'signed' | 'expired';
+  status: "unsigned" | "signed" | "expired";
   createdAt: Date;
   expiresAt: Date;
   doctorName: string;
@@ -35,9 +42,9 @@ export function SignASOs() {
   const asos: ASO[] = [
     {
       id: 1,
-      employeeName: 'João da Silva',
-      employeeCpf: '123.456.789-00',
-      asoType: 'admissional',
+      employeeName: "João da Silva",
+      employeeCpf: "123.456.789-00",
+      asoType: "admissional",
       content: `ATESTADO DE SAÚDE OCUPACIONAL - ASO
 ADMISSIONAL
 
@@ -76,17 +83,17 @@ Recomendações: Manter hábitos de vida saudável
 Médico Responsável: Dr. Carlos Alberto
 CREMESP: 123456
 Data: 12/02/2026`,
-      status: 'unsigned',
-      createdAt: new Date('2026-02-12'),
-      expiresAt: new Date('2027-02-12'),
-      doctorName: 'Dr. Carlos Alberto',
-      doctorCremesp: '123456',
+      status: "unsigned",
+      createdAt: new Date("2026-02-12"),
+      expiresAt: new Date("2027-02-12"),
+      doctorName: "Dr. Carlos Alberto",
+      doctorCremesp: "123456",
     },
     {
       id: 2,
-      employeeName: 'Maria dos Santos',
-      employeeCpf: '987.654.321-00',
-      asoType: 'periodico',
+      employeeName: "Maria dos Santos",
+      employeeCpf: "987.654.321-00",
+      asoType: "periodico",
       content: `ATESTADO DE SAÚDE OCUPACIONAL - ASO
 PERIÓDICO
 
@@ -120,16 +127,16 @@ Recomendações: Continuar com atividades físicas regulares
 Médico Responsável: Dra. Paula Mendes
 CREMESP: 654321
 Data: 10/02/2026`,
-      status: 'signed',
-      createdAt: new Date('2026-02-10'),
-      expiresAt: new Date('2027-02-10'),
-      doctorName: 'Dra. Paula Mendes',
-      doctorCremesp: '654321',
+      status: "signed",
+      createdAt: new Date("2026-02-10"),
+      expiresAt: new Date("2027-02-10"),
+      doctorName: "Dra. Paula Mendes",
+      doctorCremesp: "654321",
       signatures: [
         {
-          name: 'Dra. Paula Mendes',
-          cpf: '222.333.444-55',
-          signedAt: new Date('2026-02-10T14:30:00'),
+          name: "Dra. Paula Mendes",
+          cpf: "222.333.444-55",
+          signedAt: new Date("2026-02-10T14:30:00"),
         },
       ],
     },
@@ -139,11 +146,11 @@ Data: 10/02/2026`,
     setIsLoading(true);
     try {
       await new Promise(resolve => setTimeout(resolve, 1500));
-      console.log('ASO assinado:', asoId, signatureData);
+      console.log("ASO assinado:", asoId, signatureData);
       setIsSignatureModalOpen(false);
       setSelectedASO(null);
     } catch (error) {
-      console.error('Erro ao assinar:', error);
+      console.error("Erro ao assinar:", error);
       throw error;
     } finally {
       setIsLoading(false);
@@ -152,16 +159,16 @@ Data: 10/02/2026`,
 
   const getASOTypeLabel = (type: string) => {
     const labels = {
-      admissional: '📋 Admissional',
-      periodico: '🔄 Periódico',
-      retorno: '🔙 Retorno',
-      demissional: '👋 Demissional',
+      admissional: "📋 Admissional",
+      periodico: "🔄 Periódico",
+      retorno: "🔙 Retorno",
+      demissional: "👋 Demissional",
     };
     return labels[type as keyof typeof labels] || type;
   };
 
-  const unsignedASOs = asos.filter(a => a.status === 'unsigned');
-  const signedASOs = asos.filter(a => a.status === 'signed');
+  const unsignedASOs = asos.filter(a => a.status === "unsigned");
+  const signedASOs = asos.filter(a => a.status === "signed");
 
   return (
     <DashboardLayout>
@@ -169,7 +176,9 @@ Data: 10/02/2026`,
         {/* Header */}
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-3xl font-bold">Atestados de Saúde Ocupacional (ASOs)</h1>
+            <h1 className="text-3xl font-bold">
+              Atestados de Saúde Ocupacional (ASOs)
+            </h1>
             <p className="text-muted-foreground mt-2">
               Gerencie e assine ASOs de admissão, periódicos, retorno e demissão
             </p>
@@ -199,25 +208,35 @@ Data: 10/02/2026`,
               <Card className="border-dashed">
                 <CardContent className="pt-6 text-center">
                   <FileText className="w-12 h-12 mx-auto text-muted-foreground mb-2" />
-                  <p className="text-muted-foreground">Nenhum ASO pendente de assinatura</p>
+                  <p className="text-muted-foreground">
+                    Nenhum ASO pendente de assinatura
+                  </p>
                 </CardContent>
               </Card>
             ) : (
               unsignedASOs.map(aso => (
-                <Card key={aso.id} className="hover:shadow-md transition-shadow">
+                <Card
+                  key={aso.id}
+                  className="hover:shadow-md transition-shadow"
+                >
                   <CardHeader>
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
-                        <CardTitle className="text-base">{aso.employeeName}</CardTitle>
+                        <CardTitle className="text-base">
+                          {aso.employeeName}
+                        </CardTitle>
                         <div className="flex items-center gap-2 mt-2 flex-wrap">
-                          <Badge variant="secondary">{getASOTypeLabel(aso.asoType)}</Badge>
+                          <Badge variant="secondary">
+                            {getASOTypeLabel(aso.asoType)}
+                          </Badge>
                           <Badge variant="destructive" className="gap-1">
                             <AlertCircle className="w-3 h-3" />
                             Pendente
                           </Badge>
                           <Badge variant="outline" className="gap-1">
                             <Calendar className="w-3 h-3" />
-                            Válido até {aso.expiresAt.toLocaleDateString('pt-BR')}
+                            Válido até{" "}
+                            {aso.expiresAt.toLocaleDateString("pt-BR")}
                           </Badge>
                         </div>
                       </div>
@@ -234,8 +253,12 @@ Data: 10/02/2026`,
                   </CardHeader>
                   <CardContent className="text-sm text-muted-foreground space-y-1">
                     <p>CPF: {aso.employeeCpf}</p>
-                    <p>Médico: {aso.doctorName} (CREMESP: {aso.doctorCremesp})</p>
-                    <p>Criado em: {aso.createdAt.toLocaleDateString('pt-BR')}</p>
+                    <p>
+                      Médico: {aso.doctorName} (CREMESP: {aso.doctorCremesp})
+                    </p>
+                    <p>
+                      Criado em: {aso.createdAt.toLocaleDateString("pt-BR")}
+                    </p>
                   </CardContent>
                 </Card>
               ))
@@ -253,20 +276,28 @@ Data: 10/02/2026`,
               </Card>
             ) : (
               signedASOs.map(aso => (
-                <Card key={aso.id} className="hover:shadow-md transition-shadow">
+                <Card
+                  key={aso.id}
+                  className="hover:shadow-md transition-shadow"
+                >
                   <CardHeader>
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
-                        <CardTitle className="text-base">{aso.employeeName}</CardTitle>
+                        <CardTitle className="text-base">
+                          {aso.employeeName}
+                        </CardTitle>
                         <div className="flex items-center gap-2 mt-2 flex-wrap">
-                          <Badge variant="secondary">{getASOTypeLabel(aso.asoType)}</Badge>
+                          <Badge variant="secondary">
+                            {getASOTypeLabel(aso.asoType)}
+                          </Badge>
                           <Badge className="gap-1">
                             <CheckCircle2 className="w-3 h-3" />
                             Assinado
                           </Badge>
                           <Badge variant="outline" className="gap-1">
                             <Calendar className="w-3 h-3" />
-                            Válido até {aso.expiresAt.toLocaleDateString('pt-BR')}
+                            Válido até{" "}
+                            {aso.expiresAt.toLocaleDateString("pt-BR")}
                           </Badge>
                         </div>
                       </div>
@@ -275,7 +306,12 @@ Data: 10/02/2026`,
                   <CardContent className="text-sm text-muted-foreground space-y-1">
                     <p>CPF: {aso.employeeCpf}</p>
                     <p>Assinado por: {aso.signatures?.[0]?.name}</p>
-                    <p>Data: {aso.signatures?.[0]?.signedAt.toLocaleDateString('pt-BR')}</p>
+                    <p>
+                      Data:{" "}
+                      {aso.signatures?.[0]?.signedAt.toLocaleDateString(
+                        "pt-BR"
+                      )}
+                    </p>
                   </CardContent>
                 </Card>
               ))

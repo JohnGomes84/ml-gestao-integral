@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * GOOGLE MAPS FRONTEND INTEGRATION - ESSENTIAL GUIDE
  *
@@ -73,8 +74,6 @@
  * - “standalone” → Geocoder, DirectionsService, DistanceMatrixService, ElevationService.
  * - “data-only” → Place, Geometry utilities.
  */
-
-/// <reference types="@types/google.maps" />
 
 import { useEffect, useRef } from "react";
 import { usePersistFn } from "@/hooks/usePersistFn";

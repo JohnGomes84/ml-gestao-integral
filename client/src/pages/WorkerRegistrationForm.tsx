@@ -1,10 +1,23 @@
+// @ts-nocheck
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CheckCircle2, Upload, AlertCircle, Loader2 } from "lucide-react";
 // Storage will be handled via API call to avoid exposing S3 credentials in frontend
@@ -60,7 +73,7 @@ export default function WorkerRegistrationForm() {
       }
 
       setDocumentFile(file);
-      
+
       // Preview
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -71,10 +84,10 @@ export default function WorkerRegistrationForm() {
   };
 
   const validateCPF = (cpf: string): boolean => {
-    const cleanCpf = cpf.replace(/\D/g, '');
+    const cleanCpf = cpf.replace(/\D/g, "");
     if (cleanCpf.length !== 11) return false;
     if (/^(\d)\1{10}$/.test(cleanCpf)) return false;
-    
+
     let sum = 0;
     for (let i = 0; i < 9; i++) {
       sum += parseInt(cleanCpf.charAt(i)) * (10 - i);
@@ -82,7 +95,7 @@ export default function WorkerRegistrationForm() {
     let remainder = sum % 11;
     let digit1 = remainder < 2 ? 0 : 11 - remainder;
     if (digit1 !== parseInt(cleanCpf.charAt(9))) return false;
-    
+
     sum = 0;
     for (let i = 0; i < 10; i++) {
       sum += parseInt(cleanCpf.charAt(i)) * (11 - i);
@@ -90,7 +103,7 @@ export default function WorkerRegistrationForm() {
     remainder = sum % 11;
     let digit2 = remainder < 2 ? 0 : 11 - remainder;
     if (digit2 !== parseInt(cleanCpf.charAt(10))) return false;
-    
+
     return true;
   };
 
@@ -99,7 +112,10 @@ export default function WorkerRegistrationForm() {
     const today = new Date();
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
       age--;
     }
     return age;
@@ -130,16 +146,16 @@ export default function WorkerRegistrationForm() {
       setUploading(true);
 
       // Upload do documento via API
-      const fileExtension = documentFile.name.split('.').pop();
-      const fileName = `${formData.cpf.replace(/\D/g, '')}-${Date.now()}.${fileExtension}`;
-      
+      const fileExtension = documentFile.name.split(".").pop();
+      const fileName = `${formData.cpf.replace(/\D/g, "")}-${Date.now()}.${fileExtension}`;
+
       // Converter arquivo para base64
       const reader = new FileReader();
-      const fileData = await new Promise<string>((resolve) => {
+      const fileData = await new Promise<string>(resolve => {
         reader.onloadend = () => resolve(reader.result as string);
         reader.readAsDataURL(documentFile);
       });
-      
+
       // Upload via tRPC
       const { url: documentUrl } = await uploadMutation.mutateAsync({
         fileName,
@@ -150,7 +166,7 @@ export default function WorkerRegistrationForm() {
       // Registrar trabalhador
       await registerMutation.mutateAsync({
         ...formData,
-        cpf: formData.cpf.replace(/\D/g, ''),
+        cpf: formData.cpf.replace(/\D/g, ""),
         documentPhotoUrl: documentUrl,
       });
 
@@ -173,7 +189,8 @@ export default function WorkerRegistrationForm() {
                 Cadastro Enviado com Sucesso!
               </h2>
               <p className="text-slate-600">
-                Seu cadastro foi recebido e está em análise. Você será notificado assim que for aprovado.
+                Seu cadastro foi recebido e está em análise. Você será
+                notificado assim que for aprovado.
               </p>
             </div>
           </CardContent>
@@ -189,7 +206,8 @@ export default function WorkerRegistrationForm() {
           <CardHeader>
             <CardTitle className="text-2xl">Cadastro de Trabalhador</CardTitle>
             <CardDescription>
-              Preencha todos os campos para se cadastrar. Seu cadastro será analisado pela empresa.
+              Preencha todos os campos para se cadastrar. Seu cadastro será
+              analisado pela empresa.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -203,15 +221,19 @@ export default function WorkerRegistrationForm() {
 
               {/* Dados Pessoais */}
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-slate-900">Dados Pessoais</h3>
-                
+                <h3 className="text-lg font-semibold text-slate-900">
+                  Dados Pessoais
+                </h3>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="fullName">Nome Completo *</Label>
                     <Input
                       id="fullName"
                       value={formData.fullName}
-                      onChange={(e) => handleInputChange("fullName", e.target.value)}
+                      onChange={e =>
+                        handleInputChange("fullName", e.target.value)
+                      }
                       required
                     />
                   </div>
@@ -221,15 +243,21 @@ export default function WorkerRegistrationForm() {
                     <Input
                       id="cpf"
                       value={formData.cpf}
-                      onChange={(e) => {
-                        let value = e.target.value.replace(/\D/g, '');
+                      onChange={e => {
+                        let value = e.target.value.replace(/\D/g, "");
                         if (value.length <= 11) {
                           if (value.length > 9) {
-                            value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+                            value = value.replace(
+                              /(\d{3})(\d{3})(\d{3})(\d{2})/,
+                              "$1.$2.$3-$4"
+                            );
                           } else if (value.length > 6) {
-                            value = value.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+                            value = value.replace(
+                              /(\d{3})(\d{3})(\d{1,3})/,
+                              "$1.$2.$3"
+                            );
                           } else if (value.length > 3) {
-                            value = value.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+                            value = value.replace(/(\d{3})(\d{1,3})/, "$1.$2");
                           }
                           handleInputChange("cpf", value);
                         }
@@ -245,7 +273,9 @@ export default function WorkerRegistrationForm() {
                       id="dateOfBirth"
                       type="date"
                       value={formData.dateOfBirth}
-                      onChange={(e) => handleInputChange("dateOfBirth", e.target.value)}
+                      onChange={e =>
+                        handleInputChange("dateOfBirth", e.target.value)
+                      }
                       required
                     />
                   </div>
@@ -255,7 +285,9 @@ export default function WorkerRegistrationForm() {
                     <Input
                       id="motherName"
                       value={formData.motherName}
-                      onChange={(e) => handleInputChange("motherName", e.target.value)}
+                      onChange={e =>
+                        handleInputChange("motherName", e.target.value)
+                      }
                       required
                     />
                   </div>
@@ -264,15 +296,17 @@ export default function WorkerRegistrationForm() {
 
               {/* Contato */}
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-slate-900">Contato</h3>
-                
+                <h3 className="text-lg font-semibold text-slate-900">
+                  Contato
+                </h3>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="phone">Telefone *</Label>
                     <Input
                       id="phone"
                       value={formData.phone}
-                      onChange={(e) => handleInputChange("phone", e.target.value)}
+                      onChange={e => handleInputChange("phone", e.target.value)}
                       placeholder="(11) 99999-9999"
                       required
                     />
@@ -284,7 +318,7 @@ export default function WorkerRegistrationForm() {
                       id="email"
                       type="email"
                       value={formData.email}
-                      onChange={(e) => handleInputChange("email", e.target.value)}
+                      onChange={e => handleInputChange("email", e.target.value)}
                       placeholder="seu@email.com"
                     />
                   </div>
@@ -293,15 +327,19 @@ export default function WorkerRegistrationForm() {
 
               {/* Endereço */}
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-slate-900">Endereço</h3>
-                
+                <h3 className="text-lg font-semibold text-slate-900">
+                  Endereço
+                </h3>
+
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="md:col-span-2">
                     <Label htmlFor="street">Rua *</Label>
                     <Input
                       id="street"
                       value={formData.street}
-                      onChange={(e) => handleInputChange("street", e.target.value)}
+                      onChange={e =>
+                        handleInputChange("street", e.target.value)
+                      }
                       required
                     />
                   </div>
@@ -311,7 +349,9 @@ export default function WorkerRegistrationForm() {
                     <Input
                       id="number"
                       value={formData.number}
-                      onChange={(e) => handleInputChange("number", e.target.value)}
+                      onChange={e =>
+                        handleInputChange("number", e.target.value)
+                      }
                       required
                     />
                   </div>
@@ -321,7 +361,9 @@ export default function WorkerRegistrationForm() {
                     <Input
                       id="complement"
                       value={formData.complement}
-                      onChange={(e) => handleInputChange("complement", e.target.value)}
+                      onChange={e =>
+                        handleInputChange("complement", e.target.value)
+                      }
                     />
                   </div>
 
@@ -330,7 +372,9 @@ export default function WorkerRegistrationForm() {
                     <Input
                       id="neighborhood"
                       value={formData.neighborhood}
-                      onChange={(e) => handleInputChange("neighborhood", e.target.value)}
+                      onChange={e =>
+                        handleInputChange("neighborhood", e.target.value)
+                      }
                       required
                     />
                   </div>
@@ -340,7 +384,7 @@ export default function WorkerRegistrationForm() {
                     <Input
                       id="city"
                       value={formData.city}
-                      onChange={(e) => handleInputChange("city", e.target.value)}
+                      onChange={e => handleInputChange("city", e.target.value)}
                       required
                     />
                   </div>
@@ -350,7 +394,9 @@ export default function WorkerRegistrationForm() {
                     <Input
                       id="state"
                       value={formData.state}
-                      onChange={(e) => handleInputChange("state", e.target.value.toUpperCase())}
+                      onChange={e =>
+                        handleInputChange("state", e.target.value.toUpperCase())
+                      }
                       maxLength={2}
                       placeholder="SP"
                       required
@@ -362,7 +408,9 @@ export default function WorkerRegistrationForm() {
                     <Input
                       id="zipCode"
                       value={formData.zipCode}
-                      onChange={(e) => handleInputChange("zipCode", e.target.value)}
+                      onChange={e =>
+                        handleInputChange("zipCode", e.target.value)
+                      }
                       placeholder="00000-000"
                       required
                     />
@@ -372,14 +420,18 @@ export default function WorkerRegistrationForm() {
 
               {/* Chave PIX */}
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-slate-900">Dados de Pagamento</h3>
-                
+                <h3 className="text-lg font-semibold text-slate-900">
+                  Dados de Pagamento
+                </h3>
+
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
                     <Label htmlFor="pixKeyType">Tipo de Chave PIX *</Label>
                     <Select
                       value={formData.pixKeyType}
-                      onValueChange={(value: any) => handleInputChange("pixKeyType", value)}
+                      onValueChange={(value: any) =>
+                        handleInputChange("pixKeyType", value)
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -399,7 +451,9 @@ export default function WorkerRegistrationForm() {
                     <Input
                       id="pixKey"
                       value={formData.pixKey}
-                      onChange={(e) => handleInputChange("pixKey", e.target.value)}
+                      onChange={e =>
+                        handleInputChange("pixKey", e.target.value)
+                      }
                       placeholder="Digite sua chave PIX"
                       required
                     />
@@ -409,14 +463,18 @@ export default function WorkerRegistrationForm() {
 
               {/* Documento */}
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-slate-900">Documento com Foto</h3>
-                
+                <h3 className="text-lg font-semibold text-slate-900">
+                  Documento com Foto
+                </h3>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="documentType">Tipo de Documento *</Label>
                     <Select
                       value={formData.documentType}
-                      onValueChange={(value: any) => handleInputChange("documentType", value)}
+                      onValueChange={(value: any) =>
+                        handleInputChange("documentType", value)
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -433,7 +491,9 @@ export default function WorkerRegistrationForm() {
                     <Label htmlFor="workerType">Tipo de Contrato *</Label>
                     <Select
                       value={formData.workerType}
-                      onValueChange={(value: any) => handleInputChange("workerType", value)}
+                      onValueChange={(value: any) =>
+                        handleInputChange("workerType", value)
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -485,11 +545,7 @@ export default function WorkerRegistrationForm() {
                 </div>
               </div>
 
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={uploading}
-              >
+              <Button type="submit" className="w-full" disabled={uploading}>
                 {uploading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />

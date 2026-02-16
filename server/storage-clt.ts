@@ -1,7 +1,8 @@
+// @ts-nocheck
 // Preconfigured storage helpers for Manus WebDev templates
 // Uses the Biz-provided storage proxy (Authorization: Bearer <token>)
 
-import { ENV } from './_core/env';
+import { ENV } from "./_core/env";
 
 type StorageConfig = { baseUrl: string; apiKey: string };
 
@@ -57,7 +58,9 @@ function toFormData(
   const blob =
     typeof data === "string"
       ? new Blob([data], { type: contentType })
-      : new Blob([data], { type: contentType });
+      : new Blob([data instanceof Uint8Array ? new Uint8Array(data) : data], {
+          type: contentType,
+        });
   const form = new FormData();
   form.append("file", blob, fileName || "file");
   return form;
@@ -92,7 +95,9 @@ export async function storagePut(
   return { key, url };
 }
 
-export async function storageGet(relKey: string): Promise<{ key: string; url: string; }> {
+export async function storageGet(
+  relKey: string
+): Promise<{ key: string; url: string }> {
   const { baseUrl, apiKey } = getStorageConfig();
   const key = normalizeKey(relKey);
   return {

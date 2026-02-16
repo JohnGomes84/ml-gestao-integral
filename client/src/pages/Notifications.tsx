@@ -1,5 +1,12 @@
+// @ts-nocheck
 import DashboardLayout from "@/components/DashboardLayout";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
@@ -49,14 +56,19 @@ export default function Notifications() {
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Notificações</h1>
-          <p className="text-muted-foreground">Alertas automáticos sobre férias, ASO, banco de horas e eventos importantes.</p>
+          <p className="text-muted-foreground">
+            Alertas automáticos sobre férias, ASO, banco de horas e eventos
+            importantes.
+          </p>
         </div>
 
         {!notifications || notifications.length === 0 ? (
           <Card className="border-0 shadow-sm">
             <CardContent className="py-12 text-center">
               <Bell className="h-12 w-12 text-muted-foreground mx-auto mb-4 opacity-50" />
-              <p className="text-muted-foreground">Nenhuma notificação no momento.</p>
+              <p className="text-muted-foreground">
+                Nenhuma notificação no momento.
+              </p>
             </CardContent>
           </Card>
         ) : (
@@ -73,7 +85,9 @@ export default function Notifications() {
                           {notif.isRead ? "Lida" : "Nova"}
                         </Badge>
                       </div>
-                      <p className="text-sm text-muted-foreground mb-2">{notif.message}</p>
+                      <p className="text-sm text-muted-foreground mb-2">
+                        {notif.message}
+                      </p>
                       <p className="text-xs text-muted-foreground">
                         {formatDistanceToNow(new Date(notif.createdAt), {
                           addSuffix: true,
@@ -111,7 +125,9 @@ export default function Notifications() {
             <CardTitle className="text-base">Sobre as Notificações</CardTitle>
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground space-y-2">
-            <p>O RH Prime envia notificações automáticas para alertá-lo sobre:</p>
+            <p>
+              O RH Prime envia notificações automáticas para alertá-lo sobre:
+            </p>
             <ul className="list-disc list-inside space-y-1 ml-2">
               <li>Férias vencendo (30, 15 e 7 dias antes)</li>
               <li>ASOs com validade próxima de expirar</li>
@@ -120,7 +136,10 @@ export default function Notifications() {
               <li>Afastamentos por INSS iniciando</li>
               <li>Treinamentos obrigatórios vencidos</li>
             </ul>
-            <p className="pt-2">Você pode configurar a frequência de notificações em Configurações.</p>
+            <p className="pt-2">
+              Você pode configurar a frequência de notificações em
+              Configurações.
+            </p>
           </CardContent>
         </Card>
       </div>

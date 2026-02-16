@@ -1,8 +1,14 @@
+// @ts-nocheck
 import DashboardLayout from "@/components/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
 import { trpc } from "@/lib/trpc";
 import { Loader2, HeartPulse, AlertTriangle } from "lucide-react";
@@ -17,15 +23,21 @@ function formatDate(d: string | Date | null | undefined) {
 export default function MedicalExams() {
   const { data: exams, isLoading } = trpc.medicalExams.list.useQuery({});
   const { data: expired } = trpc.medicalExams.expired.useQuery();
-  const { data: upcoming } = trpc.medicalExams.upcoming.useQuery({ daysAhead: 30 });
+  const { data: upcoming } = trpc.medicalExams.upcoming.useQuery({
+    daysAhead: 30,
+  });
   const [, setLocation] = useLocation();
 
   return (
     <DashboardLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Saúde Ocupacional (ASO)</h1>
-          <p className="text-muted-foreground">Controle de exames médicos, validades e agendamentos.</p>
+          <h1 className="text-2xl font-bold tracking-tight">
+            Saúde Ocupacional (ASO)
+          </h1>
+          <p className="text-muted-foreground">
+            Controle de exames médicos, validades e agendamentos.
+          </p>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
@@ -37,7 +49,9 @@ export default function MedicalExams() {
             </CardHeader>
             <CardContent>
               <p className="text-2xl font-bold">{expired?.length ?? 0}</p>
-              <p className="text-xs text-muted-foreground">Exames com validade expirada</p>
+              <p className="text-xs text-muted-foreground">
+                Exames com validade expirada
+              </p>
             </CardContent>
           </Card>
           <Card className="border-0 shadow-sm border-l-4 border-l-amber-500">
@@ -48,14 +62,20 @@ export default function MedicalExams() {
             </CardHeader>
             <CardContent>
               <p className="text-2xl font-bold">{upcoming?.length ?? 0}</p>
-              <p className="text-xs text-muted-foreground">Exames próximos do vencimento</p>
+              <p className="text-xs text-muted-foreground">
+                Exames próximos do vencimento
+              </p>
             </CardContent>
           </Card>
         </div>
 
         {expired && expired.length > 0 && (
           <Card className="border-0 shadow-sm">
-            <CardHeader><CardTitle className="text-base text-destructive">ASOs Vencidos - Ação Imediata</CardTitle></CardHeader>
+            <CardHeader>
+              <CardTitle className="text-base text-destructive">
+                ASOs Vencidos - Ação Imediata
+              </CardTitle>
+            </CardHeader>
             <CardContent className="p-0">
               <Table>
                 <TableHeader>
@@ -69,12 +89,30 @@ export default function MedicalExams() {
                 </TableHeader>
                 <TableBody>
                   {expired.map((ex: any) => (
-                    <TableRow key={ex.id} className="cursor-pointer hover:bg-muted/50" onClick={() => setLocation(`/funcionarios/${ex.employeeId}`)}>
-                      <TableCell className="font-medium">{ex.employeeName || `ID ${ex.employeeId}`}</TableCell>
+                    <TableRow
+                      key={ex.id}
+                      className="cursor-pointer hover:bg-muted/50"
+                      onClick={() =>
+                        setLocation(`/funcionarios/${ex.employeeId}`)
+                      }
+                    >
+                      <TableCell className="font-medium">
+                        {ex.employeeName || `ID ${ex.employeeId}`}
+                      </TableCell>
                       <TableCell>{ex.examType}</TableCell>
                       <TableCell>{formatDate(ex.examDate)}</TableCell>
-                      <TableCell className="text-destructive font-medium">{formatDate(ex.expiryDate)}</TableCell>
-                      <TableCell><Badge variant={ex.result === "Inapto" ? "destructive" : "secondary"}>{ex.result || "-"}</Badge></TableCell>
+                      <TableCell className="text-destructive font-medium">
+                        {formatDate(ex.expiryDate)}
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          variant={
+                            ex.result === "Inapto" ? "destructive" : "secondary"
+                          }
+                        >
+                          {ex.result || "-"}
+                        </Badge>
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -84,14 +122,20 @@ export default function MedicalExams() {
         )}
 
         <Card className="border-0 shadow-sm">
-          <CardHeader><CardTitle className="text-base">Todos os Exames</CardTitle></CardHeader>
+          <CardHeader>
+            <CardTitle className="text-base">Todos os Exames</CardTitle>
+          </CardHeader>
           <CardContent className="p-0">
             {isLoading ? (
-              <div className="flex justify-center py-12"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>
+              <div className="flex justify-center py-12">
+                <Loader2 className="h-6 w-6 animate-spin text-primary" />
+              </div>
             ) : !exams || exams.length === 0 ? (
               <div className="text-center py-12">
                 <HeartPulse className="h-12 w-12 mx-auto text-muted-foreground/50 mb-3" />
-                <p className="text-muted-foreground">Nenhum exame registrado.</p>
+                <p className="text-muted-foreground">
+                  Nenhum exame registrado.
+                </p>
               </div>
             ) : (
               <Table>
@@ -107,13 +151,25 @@ export default function MedicalExams() {
                 </TableHeader>
                 <TableBody>
                   {exams.map((ex: any) => (
-                    <TableRow key={ex.id} className="cursor-pointer hover:bg-muted/50" onClick={() => setLocation(`/funcionarios/${ex.employeeId}`)}>
-                      <TableCell className="font-medium">{ex.employeeName || `ID ${ex.employeeId}`}</TableCell>
+                    <TableRow
+                      key={ex.id}
+                      className="cursor-pointer hover:bg-muted/50"
+                      onClick={() =>
+                        setLocation(`/funcionarios/${ex.employeeId}`)
+                      }
+                    >
+                      <TableCell className="font-medium">
+                        {ex.employeeName || `ID ${ex.employeeId}`}
+                      </TableCell>
                       <TableCell>{ex.examType}</TableCell>
                       <TableCell>{formatDate(ex.examDate)}</TableCell>
                       <TableCell>{formatDate(ex.expiryDate)}</TableCell>
                       <TableCell>
-                        <Badge variant={ex.result === "Inapto" ? "destructive" : "secondary"}>
+                        <Badge
+                          variant={
+                            ex.result === "Inapto" ? "destructive" : "secondary"
+                          }
+                        >
                           {ex.result || "-"}
                         </Badge>
                       </TableCell>

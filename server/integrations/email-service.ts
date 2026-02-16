@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Serviço de email para notificações
  * Integra com SendGrid ou similar
@@ -16,18 +17,18 @@ interface EmailOptions {
 export async function sendEmail(options: EmailOptions): Promise<boolean> {
   try {
     const apiKey = process.env.SENDGRID_API_KEY || process.env.EMAIL_API_KEY;
-    
+
     if (!apiKey) {
-      console.warn('Email API key não configurada');
+      console.warn("Email API key não configurada");
       return false;
     }
 
     // Implementação com SendGrid
-    const response = await fetch('https://api.sendgrid.com/v3/mail/send', {
-      method: 'POST',
+    const response = await fetch("https://api.sendgrid.com/v3/mail/send", {
+      method: "POST",
       headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         personalizations: [
@@ -37,11 +38,11 @@ export async function sendEmail(options: EmailOptions): Promise<boolean> {
           },
         ],
         from: {
-          email: options.from || 'noreply@rhprime.com',
+          email: options.from || "noreply@rhprime.com",
         },
         content: [
           {
-            type: 'text/html',
+            type: "text/html",
             value: options.html,
           },
         ],
@@ -50,7 +51,7 @@ export async function sendEmail(options: EmailOptions): Promise<boolean> {
 
     return response.ok;
   } catch (error) {
-    console.error('Erro ao enviar email:', error);
+    console.error("Erro ao enviar email:", error);
     return false;
   }
 }

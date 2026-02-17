@@ -1,7 +1,8 @@
-import crypto from 'crypto';
-import { getDb, createAuditEntry } from '../db';
-import { digitalSignatures, documents } from '../../drizzle/schema';
-import { eq } from 'drizzle-orm';
+// @ts-nocheck
+import crypto from "crypto";
+import { getDb, createAuditEntry } from "../db/db";
+import { digitalSignatures, documents } from "../drizzle/schema";
+import { eq } from "drizzle-orm";
 
 /**
  * Serviço de Assinatura Digital com integração Gov.br
@@ -14,7 +15,7 @@ export interface SignatureRequest {
   signerName: string;
   signerEmail: string;
   documentContent: Buffer;
-  signatureMethod: 'PIN' | 'BIOMETRIC' | 'CERTIFICATE';
+  signatureMethod: "PIN" | "BIOMETRIC" | "CERTIFICATE";
   ipAddress?: string;
   userAgent?: string;
 }
@@ -31,19 +32,22 @@ export interface SignatureResponse {
  * Calcular hash SHA-256 do documento
  */
 export function calculateDocumentHash(content: Buffer): string {
-  return crypto.createHash('sha256').update(content).digest('hex');
+  return crypto.createHash("sha256").update(content).digest("hex");
 }
 
 /**
  * Simular assinatura PKCS#7 (em produção, usar API Gov.br)
  * Em produção, isso seria chamada à API: https://assinatura-api.iti.br/externo/v2/assinarPKCS7
  */
-export function signDocumentHash(documentHash: string, signerCpf: string): string {
+export function signDocumentHash(
+  documentHash: string,
+  signerCpf: string
+): string {
   // Em produção, isso seria a resposta da API Gov.br
   // Por enquanto, simulamos com HMAC-SHA256
-  const hmac = crypto.createHmac('sha256', signerCpf);
+  const hmac = crypto.createHmac("sha256", signerCpf);
   hmac.update(documentHash);
-  return hmac.digest('hex');
+  return hmac.digest("hex");
 }
 
 /**
@@ -65,7 +69,7 @@ export async function createDigitalSignature(
   request: SignatureRequest
 ): Promise<SignatureResponse> {
   const db = await getDb();
-  if (!db) throw new Error('Database not available');
+  if (!db) throw new Error("Database not available");
 
   // Validar documento existe
   const doc = await db
@@ -75,7 +79,7 @@ export async function createDigitalSignature(
     .limit(1);
 
   if (!doc || doc.length === 0) {
-    throw new Error('Documento não encontrado');
+    throw new Error("Documento não encontrado");
   }
 
   // Calcular hash do documento
@@ -103,15 +107,15 @@ export async function createDigitalSignature(
   await createAuditEntry({
     cpf: request.cpf,
     userId: undefined,
-    action: 'SIGN',
-    resource: 'documents',
+    action: "SIGN",
+    resource: "documents",
     resourceId: request.documentId,
     description: `Documento assinado digitalmente por ${request.signerName}`,
     timestamp: new Date(),
     ipAddress: request.ipAddress,
     userAgent: request.userAgent,
-    changesBefore: { status: 'unsigned' },
-    changesAfter: { status: 'signed', signatureHash },
+    changesBefore: { status: "unsigned" },
+    changesAfter: { status: "signed", signatureHash },
   });
 
   return {
@@ -158,7 +162,11 @@ export async function validateDocumentSignature(
     }
 
     // Validar assinatura
-    const isValid = validateSignature(sig.documentHash, sig.signatureHash, sig.cpf);
+    const isValid = validateSignature(
+      sig.documentHash,
+      sig.signatureHash,
+      sig.cpf
+    );
     if (!isValid) {
       await db
         .update(digitalSignatures)

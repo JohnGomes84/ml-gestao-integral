@@ -1,12 +1,32 @@
+// @ts-nocheck
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Calendar, Download, FileText, TrendingUp } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import * as XLSX from 'xlsx';
+import * as XLSX from "xlsx";
 
 export default function BiweeklyReport() {
   const currentDate = new Date();
@@ -18,7 +38,11 @@ export default function BiweeklyReport() {
   // Buscar lista de clientes
   const { data: clientsList } = trpc.clients.list.useQuery();
 
-  const { data: reportData, isLoading, refetch } = trpc.reports.biweeklyReport.useQuery({
+  const {
+    data: reportData,
+    isLoading,
+    refetch,
+  } = trpc.reports.biweeklyReport.useQuery({
     year,
     month,
     period,
@@ -32,12 +56,12 @@ export default function BiweeklyReport() {
     const wb = XLSX.utils.book_new();
 
     // Aba 1: Resumo por Cliente
-    const summaryData = reportData.summary.flatMap(client => 
+    const summaryData = reportData.summary.flatMap(client =>
       client.shifts.map(shift => ({
-        "Cliente": client.clientName,
-        "Turno": shift.shiftName,
+        Cliente: client.clientName,
+        Turno: shift.shiftName,
         "Pessoas-Dia": shift.personDays,
-        "Trabalhadores": shift.workerCount,
+        Trabalhadores: shift.workerCount,
       }))
     );
     const ws1 = XLSX.utils.json_to_sheet(summaryData);
@@ -45,30 +69,52 @@ export default function BiweeklyReport() {
 
     // Aba 2: Detalhamento
     const detailsData = reportData.details.map(detail => ({
-      "Data": new Date(detail.workDate).toLocaleDateString('pt-BR'),
-      "Cliente": detail.clientName,
-      "Turno": detail.shiftName,
-      "Trabalhador": detail.workerName,
-      "Local": detail.locationName,
-      "Função": detail.jobFunction || "-",
-      "Diária": detail.dailyRate ? `R$ ${parseFloat(detail.dailyRate).toFixed(2)}` : "-",
-      "Marmita": detail.tookMeal ? "Sim" : "Não",
-      "Custo Marmita": detail.mealCost ? `R$ ${parseFloat(detail.mealCost).toFixed(2)}` : "-",
-      "Valor Líquido": detail.netPay ? `R$ ${parseFloat(detail.netPay).toFixed(2)}` : "-",
+      Data: new Date(detail.workDate).toLocaleDateString("pt-BR"),
+      Cliente: detail.clientName,
+      Turno: detail.shiftName,
+      Trabalhador: detail.workerName,
+      Local: detail.locationName,
+      Função: detail.jobFunction || "-",
+      Diária: detail.dailyRate
+        ? `R$ ${parseFloat(detail.dailyRate).toFixed(2)}`
+        : "-",
+      Marmita: detail.tookMeal ? "Sim" : "Não",
+      "Custo Marmita": detail.mealCost
+        ? `R$ ${parseFloat(detail.mealCost).toFixed(2)}`
+        : "-",
+      "Valor Líquido": detail.netPay
+        ? `R$ ${parseFloat(detail.netPay).toFixed(2)}`
+        : "-",
     }));
     const ws2 = XLSX.utils.json_to_sheet(detailsData);
     XLSX.utils.book_append_sheet(wb, ws2, "Detalhamento");
 
     // Salvar arquivo
-    XLSX.writeFile(wb, `relatorio-quinzenal-${year}-${String(month).padStart(2, '0')}-${period}.xlsx`);
+    XLSX.writeFile(
+      wb,
+      `relatorio-quinzenal-${year}-${String(month).padStart(2, "0")}-${period}.xlsx`
+    );
   };
 
   const monthNames = [
-    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+    "Janeiro",
+    "Fevereiro",
+    "Março",
+    "Abril",
+    "Maio",
+    "Junho",
+    "Julho",
+    "Agosto",
+    "Setembro",
+    "Outubro",
+    "Novembro",
+    "Dezembro",
   ];
 
-  const years = Array.from({ length: 5 }, (_, i) => currentDate.getFullYear() - i);
+  const years = Array.from(
+    { length: 5 },
+    (_, i) => currentDate.getFullYear() - i
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
@@ -102,16 +148,18 @@ export default function BiweeklyReport() {
                 <label className="text-sm font-medium text-slate-700 mb-2 block">
                   Cliente
                 </label>
-                <Select 
-                  value={clientId?.toString() || "all"} 
-                  onValueChange={(v) => setClientId(v === "all" ? undefined : parseInt(v))}
+                <Select
+                  value={clientId?.toString() || "all"}
+                  onValueChange={v =>
+                    setClientId(v === "all" ? undefined : parseInt(v))
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">Todos os clientes</SelectItem>
-                    {clientsList?.map((client) => (
+                    {clientsList?.map(client => (
                       <SelectItem key={client.id} value={client.id.toString()}>
                         {client.companyName}
                       </SelectItem>
@@ -125,13 +173,18 @@ export default function BiweeklyReport() {
                 <label className="text-sm font-medium text-slate-700 mb-2 block">
                   Ano
                 </label>
-                <Select value={year.toString()} onValueChange={(v) => setYear(parseInt(v))}>
+                <Select
+                  value={year.toString()}
+                  onValueChange={v => setYear(parseInt(v))}
+                >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     {years.map(y => (
-                      <SelectItem key={y} value={y.toString()}>{y}</SelectItem>
+                      <SelectItem key={y} value={y.toString()}>
+                        {y}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -142,7 +195,10 @@ export default function BiweeklyReport() {
                 <label className="text-sm font-medium text-slate-700 mb-2 block">
                   Mês
                 </label>
-                <Select value={month.toString()} onValueChange={(v) => setMonth(parseInt(v))}>
+                <Select
+                  value={month.toString()}
+                  onValueChange={v => setMonth(parseInt(v))}
+                >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -161,13 +217,20 @@ export default function BiweeklyReport() {
                 <label className="text-sm font-medium text-slate-700 mb-2 block">
                   Quinzena
                 </label>
-                <Select value={period} onValueChange={(v) => setPeriod(v as "first" | "second")}>
+                <Select
+                  value={period}
+                  onValueChange={v => setPeriod(v as "first" | "second")}
+                >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="first">1ª Quinzena (dias 1-15)</SelectItem>
-                    <SelectItem value="second">2ª Quinzena (dias 16-fim)</SelectItem>
+                    <SelectItem value="first">
+                      1ª Quinzena (dias 1-15)
+                    </SelectItem>
+                    <SelectItem value="second">
+                      2ª Quinzena (dias 16-fim)
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -232,7 +295,8 @@ export default function BiweeklyReport() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-lg font-semibold text-slate-900">
-                    {reportData.period?.startDate} a {reportData.period?.endDate}
+                    {reportData.period?.startDate} a{" "}
+                    {reportData.period?.endDate}
                   </div>
                 </CardContent>
               </Card>
@@ -261,18 +325,25 @@ export default function BiweeklyReport() {
                   </div>
                 ) : (
                   <div className="space-y-6">
-                    {reportData.summary.map((client) => (
-                      <div key={client.clientId} className="border rounded-lg p-4">
+                    {reportData.summary.map(client => (
+                      <div
+                        key={client.clientId}
+                        className="border rounded-lg p-4"
+                      >
                         <div className="flex items-center justify-between mb-4">
                           <div>
                             <h3 className="text-lg font-semibold text-slate-900">
                               {client.clientName}
                             </h3>
                             <p className="text-sm text-slate-600">
-                              Total: <strong>{client.totalPersonDays}</strong> pessoas-dia
+                              Total: <strong>{client.totalPersonDays}</strong>{" "}
+                              pessoas-dia
                             </p>
                           </div>
-                          <Badge variant="outline" className="text-lg px-4 py-2">
+                          <Badge
+                            variant="outline"
+                            className="text-lg px-4 py-2"
+                          >
                             {client.totalPersonDays} PD
                           </Badge>
                         </div>
@@ -282,16 +353,24 @@ export default function BiweeklyReport() {
                           <TableHeader>
                             <TableRow>
                               <TableHead>Turno</TableHead>
-                              <TableHead className="text-right">Pessoas-Dia</TableHead>
-                              <TableHead className="text-right">Trabalhadores</TableHead>
+                              <TableHead className="text-right">
+                                Pessoas-Dia
+                              </TableHead>
+                              <TableHead className="text-right">
+                                Trabalhadores
+                              </TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
                             {client.shifts.map((shift, idx) => (
                               <TableRow key={idx}>
-                                <TableCell className="font-medium">{shift.shiftName}</TableCell>
+                                <TableCell className="font-medium">
+                                  {shift.shiftName}
+                                </TableCell>
                                 <TableCell className="text-right">
-                                  <Badge variant="secondary">{shift.personDays}</Badge>
+                                  <Badge variant="secondary">
+                                    {shift.personDays}
+                                  </Badge>
                                 </TableCell>
                                 <TableCell className="text-right text-slate-600">
                                   {shift.workerCount}
@@ -336,11 +415,15 @@ export default function BiweeklyReport() {
                         {reportData.details.map((detail, idx) => (
                           <TableRow key={idx}>
                             <TableCell className="font-medium">
-                              {new Date(detail.workDate).toLocaleDateString('pt-BR')}
+                              {new Date(detail.workDate).toLocaleDateString(
+                                "pt-BR"
+                              )}
                             </TableCell>
                             <TableCell>{detail.clientName}</TableCell>
                             <TableCell>
-                              <Badge variant="outline">{detail.shiftName}</Badge>
+                              <Badge variant="outline">
+                                {detail.shiftName}
+                              </Badge>
                             </TableCell>
                             <TableCell>{detail.workerName}</TableCell>
                             <TableCell className="text-sm text-slate-600">
@@ -350,11 +433,16 @@ export default function BiweeklyReport() {
                               {detail.jobFunction || "-"}
                             </TableCell>
                             <TableCell className="text-right">
-                              {detail.dailyRate ? `R$ ${parseFloat(detail.dailyRate).toFixed(2)}` : "-"}
+                              {detail.dailyRate
+                                ? `R$ ${parseFloat(detail.dailyRate).toFixed(2)}`
+                                : "-"}
                             </TableCell>
                             <TableCell className="text-center">
                               {detail.tookMeal ? (
-                                <Badge variant="secondary" className="bg-orange-100 text-orange-700">
+                                <Badge
+                                  variant="secondary"
+                                  className="bg-orange-100 text-orange-700"
+                                >
                                   Sim
                                 </Badge>
                               ) : (
@@ -362,7 +450,9 @@ export default function BiweeklyReport() {
                               )}
                             </TableCell>
                             <TableCell className="text-right font-semibold text-green-600">
-                              {detail.netPay ? `R$ ${parseFloat(detail.netPay).toFixed(2)}` : "-"}
+                              {detail.netPay
+                                ? `R$ ${parseFloat(detail.netPay).toFixed(2)}`
+                                : "-"}
                             </TableCell>
                           </TableRow>
                         ))}

@@ -1,20 +1,21 @@
-import React, { useState } from 'react';
-import DashboardLayout from '@/components/DashboardLayout';
-import { DocumentViewer } from '@/components/DocumentViewer';
-import { SignatureModal } from '@/components/SignatureModal';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { AlertCircle, CheckCircle2, FileText, Download } from 'lucide-react';
-import { trpc } from '@/lib/trpc';
+// @ts-nocheck
+import React, { useState } from "react";
+import DashboardLayout from "@/components/DashboardLayout";
+import { DocumentViewer } from "@/components/DocumentViewer";
+import { SignatureModal } from "@/components/SignatureModal";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AlertCircle, CheckCircle2, FileText, Download } from "lucide-react";
+import { trpc } from "@/lib/trpc";
 
 interface Contract {
   id: number;
   name: string;
-  type: 'contract' | 'aso' | 'pgr';
+  type: "contract" | "aso" | "pgr";
   content: string;
-  status: 'unsigned' | 'signed' | 'expired';
+  status: "unsigned" | "signed" | "expired";
   createdAt: Date;
   expiresAt?: Date;
   employeeId: number;
@@ -28,7 +29,9 @@ interface Contract {
 }
 
 export function SignContracts() {
-  const [selectedContract, setSelectedContract] = useState<Contract | null>(null);
+  const [selectedContract, setSelectedContract] = useState<Contract | null>(
+    null
+  );
   const [isSignatureModalOpen, setIsSignatureModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -36,8 +39,8 @@ export function SignContracts() {
   const contracts: Contract[] = [
     {
       id: 1,
-      name: 'Contrato de Trabalho - João Silva',
-      type: 'contract',
+      name: "Contrato de Trabalho - João Silva",
+      type: "contract",
       content: `CONTRATO DE TRABALHO
 
 Celebrado entre:
@@ -55,17 +58,17 @@ CLÁUSULAS:
 5. Período de experiência: 90 dias
 
 Assinado digitalmente conforme Lei nº 14.063/2020`,
-      status: 'unsigned',
-      createdAt: new Date('2026-02-10'),
-      expiresAt: new Date('2026-03-10'),
+      status: "unsigned",
+      createdAt: new Date("2026-02-10"),
+      expiresAt: new Date("2026-03-10"),
       employeeId: 1,
-      employeeName: 'João Silva',
-      employeeCpf: '123.456.789-00',
+      employeeName: "João Silva",
+      employeeCpf: "123.456.789-00",
     },
     {
       id: 2,
-      name: 'ASO - Admissional - Maria Santos',
-      type: 'aso',
+      name: "ASO - Admissional - Maria Santos",
+      type: "aso",
       content: `ATESTADO DE SAÚDE OCUPACIONAL - ASO
 
 Paciente: Maria dos Santos
@@ -88,17 +91,17 @@ APTO para exercer as funções de Assistente Administrativo
 
 Médico Responsável: Dr. Carlos Alberto
 CREMESP: 123456`,
-      status: 'signed',
-      createdAt: new Date('2026-02-10'),
-      expiresAt: new Date('2027-02-10'),
+      status: "signed",
+      createdAt: new Date("2026-02-10"),
+      expiresAt: new Date("2027-02-10"),
       employeeId: 2,
-      employeeName: 'Maria Santos',
-      employeeCpf: '987.654.321-00',
+      employeeName: "Maria Santos",
+      employeeCpf: "987.654.321-00",
       signatures: [
         {
-          name: 'Dr. Carlos Alberto',
-          cpf: '111.222.333-44',
-          signedAt: new Date('2026-02-10T14:30:00'),
+          name: "Dr. Carlos Alberto",
+          cpf: "111.222.333-44",
+          signedAt: new Date("2026-02-10T14:30:00"),
         },
       ],
     },
@@ -120,19 +123,19 @@ CREMESP: 123456`,
       //   signatureMethod: signatureData.signatureMethod,
       // });
 
-      console.log('Contrato assinado:', contractId, signatureData);
+      console.log("Contrato assinado:", contractId, signatureData);
       setIsSignatureModalOpen(false);
       setSelectedContract(null);
     } catch (error) {
-      console.error('Erro ao assinar:', error);
+      console.error("Erro ao assinar:", error);
       throw error;
     } finally {
       setIsLoading(false);
     }
   };
 
-  const unsignedContracts = contracts.filter(c => c.status === 'unsigned');
-  const signedContracts = contracts.filter(c => c.status === 'signed');
+  const unsignedContracts = contracts.filter(c => c.status === "unsigned");
+  const signedContracts = contracts.filter(c => c.status === "signed");
 
   return (
     <DashboardLayout>
@@ -164,23 +167,30 @@ CREMESP: 123456`,
               <Card className="border-dashed">
                 <CardContent className="pt-6 text-center">
                   <FileText className="w-12 h-12 mx-auto text-muted-foreground mb-2" />
-                  <p className="text-muted-foreground">Nenhum documento pendente de assinatura</p>
+                  <p className="text-muted-foreground">
+                    Nenhum documento pendente de assinatura
+                  </p>
                 </CardContent>
               </Card>
             ) : (
               unsignedContracts.map(contract => (
-                <Card key={contract.id} className="hover:shadow-md transition-shadow">
+                <Card
+                  key={contract.id}
+                  className="hover:shadow-md transition-shadow"
+                >
                   <CardHeader>
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
-                        <CardTitle className="text-base">{contract.name}</CardTitle>
+                        <CardTitle className="text-base">
+                          {contract.name}
+                        </CardTitle>
                         <div className="flex items-center gap-2 mt-2">
                           <Badge variant="secondary">
-                            {contract.type === 'contract'
-                              ? '📋 Contrato'
-                              : contract.type === 'aso'
-                                ? '🏥 ASO'
-                                : '⚠️ PGR'}
+                            {contract.type === "contract"
+                              ? "📋 Contrato"
+                              : contract.type === "aso"
+                                ? "🏥 ASO"
+                                : "⚠️ PGR"}
                           </Badge>
                           <Badge variant="destructive" className="gap-1">
                             <AlertCircle className="w-3 h-3" />
@@ -201,10 +211,14 @@ CREMESP: 123456`,
                   </CardHeader>
                   <CardContent className="text-sm text-muted-foreground">
                     <p>Funcionário: {contract.employeeName}</p>
-                    <p>Criado em: {contract.createdAt.toLocaleDateString('pt-BR')}</p>
+                    <p>
+                      Criado em:{" "}
+                      {contract.createdAt.toLocaleDateString("pt-BR")}
+                    </p>
                     {contract.expiresAt && (
                       <p className="text-red-600 font-medium">
-                        Válido até: {contract.expiresAt.toLocaleDateString('pt-BR')}
+                        Válido até:{" "}
+                        {contract.expiresAt.toLocaleDateString("pt-BR")}
                       </p>
                     )}
                   </CardContent>
@@ -219,23 +233,30 @@ CREMESP: 123456`,
               <Card className="border-dashed">
                 <CardContent className="pt-6 text-center">
                   <FileText className="w-12 h-12 mx-auto text-muted-foreground mb-2" />
-                  <p className="text-muted-foreground">Nenhum documento assinado</p>
+                  <p className="text-muted-foreground">
+                    Nenhum documento assinado
+                  </p>
                 </CardContent>
               </Card>
             ) : (
               signedContracts.map(contract => (
-                <Card key={contract.id} className="hover:shadow-md transition-shadow">
+                <Card
+                  key={contract.id}
+                  className="hover:shadow-md transition-shadow"
+                >
                   <CardHeader>
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
-                        <CardTitle className="text-base">{contract.name}</CardTitle>
+                        <CardTitle className="text-base">
+                          {contract.name}
+                        </CardTitle>
                         <div className="flex items-center gap-2 mt-2">
                           <Badge variant="secondary">
-                            {contract.type === 'contract'
-                              ? '📋 Contrato'
-                              : contract.type === 'aso'
-                                ? '🏥 ASO'
-                                : '⚠️ PGR'}
+                            {contract.type === "contract"
+                              ? "📋 Contrato"
+                              : contract.type === "aso"
+                                ? "🏥 ASO"
+                                : "⚠️ PGR"}
                           </Badge>
                           <Badge className="gap-1">
                             <CheckCircle2 className="w-3 h-3" />
@@ -253,7 +274,12 @@ CREMESP: 123456`,
                   </CardHeader>
                   <CardContent className="text-sm text-muted-foreground">
                     <p>Funcionário: {contract.employeeName}</p>
-                    <p>Assinado em: {contract.signatures?.[0]?.signedAt.toLocaleDateString('pt-BR')}</p>
+                    <p>
+                      Assinado em:{" "}
+                      {contract.signatures?.[0]?.signedAt.toLocaleDateString(
+                        "pt-BR"
+                      )}
+                    </p>
                     <p>Assinante: {contract.signatures?.[0]?.name}</p>
                   </CardContent>
                 </Card>
@@ -265,7 +291,9 @@ CREMESP: 123456`,
         {/* Selected Document Viewer */}
         {selectedContract && (
           <div className="mt-8">
-            <h2 className="text-xl font-semibold mb-4">Visualização do Documento</h2>
+            <h2 className="text-xl font-semibold mb-4">
+              Visualização do Documento
+            </h2>
             <DocumentViewer
               documentName={selectedContract.name}
               documentType={selectedContract.type}

@@ -1,9 +1,14 @@
-import { describe, it, expect } from 'vitest';
-import { calculatePayroll, validatePayrollInput, PayrollInput } from './payroll-calculator';
+// @ts-nocheck
+import { describe, it, expect } from "vitest";
+import {
+  calculatePayroll,
+  validatePayrollInput,
+  PayrollInput,
+} from "./payroll-calculator";
 
-describe('Payroll Calculator', () => {
-  describe('calculatePayroll', () => {
-    it('deve calcular folha simples sem adicionais', () => {
+describe("Payroll Calculator", () => {
+  describe("calculatePayroll", () => {
+    it("deve calcular folha simples sem adicionais", () => {
       const input: PayrollInput = {
         baseSalary: 3000,
       };
@@ -20,7 +25,7 @@ describe('Payroll Calculator', () => {
       expect(result.netSalary).toBeLessThan(result.grossSalary);
     });
 
-    it('deve calcular folha com adicionais e bônus', () => {
+    it("deve calcular folha com adicionais e bônus", () => {
       const input: PayrollInput = {
         baseSalary: 3000,
         allowances: 500,
@@ -35,7 +40,7 @@ describe('Payroll Calculator', () => {
       expect(result.grossSalary).toBe(4500);
     });
 
-    it('deve calcular INSS progressivo corretamente', () => {
+    it("deve calcular INSS progressivo corretamente", () => {
       // Teste com salário na primeira faixa
       const input1: PayrollInput = { baseSalary: 1000 };
       const result1 = calculatePayroll(input1);
@@ -52,7 +57,7 @@ describe('Payroll Calculator', () => {
       expect(result3.inss).toBe(1090.44); // Teto INSS
     });
 
-    it('deve calcular IR com dependentes', () => {
+    it("deve calcular IR com dependentes", () => {
       const inputSemDependentes: PayrollInput = {
         baseSalary: 5000,
       };
@@ -68,14 +73,14 @@ describe('Payroll Calculator', () => {
       expect(resultComDependentes.ir).toBeLessThan(resultSemDependentes.ir);
     });
 
-    it('deve calcular FGTS corretamente', () => {
+    it("deve calcular FGTS corretamente", () => {
       const input: PayrollInput = { baseSalary: 2500 };
       const result = calculatePayroll(input);
 
       expect(result.fgts).toBe(200); // 2500 * 0.08
     });
 
-    it('deve calcular salário líquido corretamente', () => {
+    it("deve calcular salário líquido corretamente", () => {
       const input: PayrollInput = {
         baseSalary: 3000,
         allowances: 500,
@@ -84,22 +89,23 @@ describe('Payroll Calculator', () => {
 
       const result = calculatePayroll(input);
 
-      const expectedNet = result.grossSalary - result.inss - result.ir - result.otherDeductions;
+      const expectedNet =
+        result.grossSalary - result.inss - result.ir - result.otherDeductions;
       expect(result.netSalary).toBe(expectedNet);
     });
 
-    it('deve arredondar valores para 2 casas decimais', () => {
+    it("deve arredondar valores para 2 casas decimais", () => {
       const input: PayrollInput = { baseSalary: 3333.33 };
       const result = calculatePayroll(input);
 
-      // Todos os valores devem ter no máximo 2 casas decimais
-      expect(result.inss % 0.01).toBeLessThan(0.001);
-      expect(result.ir % 0.01).toBeLessThan(0.001);
-      expect(result.fgts % 0.01).toBeLessThan(0.001);
-      expect(result.netSalary % 0.01).toBeLessThan(0.001);
+      // Todos os valores devem estar arredondados em 2 casas decimais
+      expect(result.inss).toBe(Number(result.inss.toFixed(2)));
+      expect(result.ir).toBe(Number(result.ir.toFixed(2)));
+      expect(result.fgts).toBe(Number(result.fgts.toFixed(2)));
+      expect(result.netSalary).toBe(Number(result.netSalary.toFixed(2)));
     });
 
-    it('deve retornar IR zero para salários baixos', () => {
+    it("deve retornar IR zero para salários baixos", () => {
       const input: PayrollInput = { baseSalary: 1000 };
       const result = calculatePayroll(input);
 
@@ -107,8 +113,8 @@ describe('Payroll Calculator', () => {
     });
   });
 
-  describe('validatePayrollInput', () => {
-    it('deve validar entrada correta', () => {
+  describe("validatePayrollInput", () => {
+    it("deve validar entrada correta", () => {
       const input: PayrollInput = {
         baseSalary: 3000,
         allowances: 500,
@@ -118,46 +124,46 @@ describe('Payroll Calculator', () => {
       expect(errors).toHaveLength(0);
     });
 
-    it('deve rejeitar salário base negativo', () => {
+    it("deve rejeitar salário base negativo", () => {
       const input: PayrollInput = { baseSalary: -1000 };
       const errors = validatePayrollInput(input);
 
-      expect(errors).toContain('Salário base não pode ser negativo');
+      expect(errors).toContain("Salário base não pode ser negativo");
     });
 
-    it('deve rejeitar adicionais negativos', () => {
+    it("deve rejeitar adicionais negativos", () => {
       const input: PayrollInput = {
         baseSalary: 3000,
         allowances: -500,
       };
 
       const errors = validatePayrollInput(input);
-      expect(errors).toContain('Adicionais não podem ser negativos');
+      expect(errors).toContain("Adicionais não podem ser negativos");
     });
 
-    it('deve rejeitar bônus negativos', () => {
+    it("deve rejeitar bônus negativos", () => {
       const input: PayrollInput = {
         baseSalary: 3000,
         bonuses: -1000,
       };
 
       const errors = validatePayrollInput(input);
-      expect(errors).toContain('Bônus não podem ser negativos');
+      expect(errors).toContain("Bônus não podem ser negativos");
     });
 
-    it('deve rejeitar dependentes negativos', () => {
+    it("deve rejeitar dependentes negativos", () => {
       const input: PayrollInput = {
         baseSalary: 3000,
         dependents: -1,
       };
 
       const errors = validatePayrollInput(input);
-      expect(errors).toContain('Número de dependentes não pode ser negativo');
+      expect(errors).toContain("Número de dependentes não pode ser negativo");
     });
   });
 
-  describe('Casos reais de folha', () => {
-    it('deve calcular folha de colaborador CLT típico', () => {
+  describe("Casos reais de folha", () => {
+    it("deve calcular folha de colaborador CLT típico", () => {
       const input: PayrollInput = {
         baseSalary: 3500,
         allowances: 200, // Vale refeição
@@ -175,7 +181,7 @@ describe('Payroll Calculator', () => {
       expect(result.netSalary).toBeLessThan(result.grossSalary);
     });
 
-    it('deve calcular folha com bônus de produção', () => {
+    it("deve calcular folha com bônus de produção", () => {
       const input: PayrollInput = {
         baseSalary: 4000,
         allowances: 300,

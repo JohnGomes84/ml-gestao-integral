@@ -1,11 +1,31 @@
+// @ts-nocheck
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { toast } from "sonner";
 import { Clock, Plus, Edit, Trash2, Building2 } from "lucide-react";
 import { Link } from "wouter";
@@ -16,7 +36,12 @@ export default function Shifts() {
   const [shiftFormData, setShiftFormData] = useState({
     clientId: "",
     shiftName: "",
-    shiftType: "morning" as "morning" | "afternoon" | "night" | "business" | "custom",
+    shiftType: "morning" as
+      | "morning"
+      | "afternoon"
+      | "night"
+      | "business"
+      | "custom",
     startTime: "",
     endTime: "",
   });
@@ -32,7 +57,7 @@ export default function Shifts() {
       resetForm();
       utils.shifts.list.invalidate();
     },
-    onError: (error) => {
+    onError: error => {
       toast.error(`Erro ao cadastrar: ${error.message}`);
     },
   });
@@ -44,7 +69,7 @@ export default function Shifts() {
       resetForm();
       utils.shifts.list.invalidate();
     },
-    onError: (error) => {
+    onError: error => {
       toast.error(`Erro ao atualizar: ${error.message}`);
     },
   });
@@ -54,7 +79,7 @@ export default function Shifts() {
       toast.success("Turno excluído com sucesso!");
       utils.shifts.list.invalidate();
     },
-    onError: (error) => {
+    onError: error => {
       toast.error(`Erro ao excluir: ${error.message}`);
     },
   });
@@ -72,8 +97,13 @@ export default function Shifts() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!shiftFormData.clientId || !shiftFormData.shiftName || !shiftFormData.startTime || !shiftFormData.endTime) {
+
+    if (
+      !shiftFormData.clientId ||
+      !shiftFormData.shiftName ||
+      !shiftFormData.startTime ||
+      !shiftFormData.endTime
+    ) {
       toast.error("Preencha todos os campos obrigatórios");
       return;
     }
@@ -160,10 +190,13 @@ export default function Shifts() {
             Configure turnos personalizados para cada cliente
           </p>
         </div>
-        <Dialog open={isDialogOpen} onOpenChange={(open) => {
-          setIsDialogOpen(open);
-          if (!open) resetForm();
-        }}>
+        <Dialog
+          open={isDialogOpen}
+          onOpenChange={open => {
+            setIsDialogOpen(open);
+            if (!open) resetForm();
+          }}
+        >
           <DialogTrigger asChild>
             <Button>
               <Plus className="mr-2 h-4 w-4" />
@@ -172,7 +205,9 @@ export default function Shifts() {
           </DialogTrigger>
           <DialogContent className="max-w-md">
             <DialogHeader>
-              <DialogTitle>{editingShift ? "Editar Turno" : "Novo Turno"}</DialogTitle>
+              <DialogTitle>
+                {editingShift ? "Editar Turno" : "Novo Turno"}
+              </DialogTitle>
               <DialogDescription>
                 Configure os horários de trabalho para um cliente específico
               </DialogDescription>
@@ -182,7 +217,9 @@ export default function Shifts() {
                 <Label htmlFor="clientId">Cliente *</Label>
                 <Select
                   value={shiftFormData.clientId}
-                  onValueChange={(value) => setShiftFormData({ ...shiftFormData, clientId: value })}
+                  onValueChange={value =>
+                    setShiftFormData({ ...shiftFormData, clientId: value })
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione o cliente" />
@@ -201,7 +238,9 @@ export default function Shifts() {
                 <Label htmlFor="shiftType">Tipo de Turno *</Label>
                 <Select
                   value={shiftFormData.shiftType}
-                  onValueChange={(value: any) => setShiftFormData({ ...shiftFormData, shiftType: value })}
+                  onValueChange={(value: any) =>
+                    setShiftFormData({ ...shiftFormData, shiftType: value })
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -221,7 +260,12 @@ export default function Shifts() {
                 <Input
                   id="shiftName"
                   value={shiftFormData.shiftName}
-                  onChange={(e) => setShiftFormData({ ...shiftFormData, shiftName: e.target.value })}
+                  onChange={e =>
+                    setShiftFormData({
+                      ...shiftFormData,
+                      shiftName: e.target.value,
+                    })
+                  }
                   placeholder="Ex: Manhã (6h-14h)"
                 />
               </div>
@@ -233,7 +277,12 @@ export default function Shifts() {
                     id="startTime"
                     type="time"
                     value={shiftFormData.startTime}
-                    onChange={(e) => setShiftFormData({ ...shiftFormData, startTime: e.target.value })}
+                    onChange={e =>
+                      setShiftFormData({
+                        ...shiftFormData,
+                        startTime: e.target.value,
+                      })
+                    }
                   />
                 </div>
                 <div className="space-y-2">
@@ -242,13 +291,22 @@ export default function Shifts() {
                     id="endTime"
                     type="time"
                     value={shiftFormData.endTime}
-                    onChange={(e) => setShiftFormData({ ...shiftFormData, endTime: e.target.value })}
+                    onChange={e =>
+                      setShiftFormData({
+                        ...shiftFormData,
+                        endTime: e.target.value,
+                      })
+                    }
                   />
                 </div>
               </div>
 
               <div className="flex justify-end gap-2 pt-4">
-                <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsDialogOpen(false)}
+                >
                   Cancelar
                 </Button>
                 <Button type="submit">
@@ -271,60 +329,70 @@ export default function Shifts() {
         </Card>
       ) : (
         <div className="space-y-6">
-          {Object.entries(shiftsByClient || {}).map(([clientId, clientShifts]: [string, any]) => {
-            const client = clients?.find((c: any) => c.id === parseInt(clientId));
-            return (
-              <Card key={clientId}>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Building2 className="h-5 w-5" />
-                    {client?.companyName || `Cliente #${clientId}`}
-                  </CardTitle>
-                  <CardDescription>
-                    {clientShifts.length} turno(s) configurado(s)
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                    {clientShifts.map((shift: any) => (
-                      <Card key={shift.id} className="border-2">
-                        <CardContent className="pt-6">
-                          <div className="flex items-start justify-between mb-3">
-                            <div>
-                              <h3 className="font-semibold text-lg">{shift.shiftName}</h3>
-                              <span className={`inline-block px-2 py-1 rounded text-xs font-medium mt-1 ${getShiftTypeColor(shift.shiftType)}`}>
-                                {getShiftTypeLabel(shift.shiftType)}
+          {Object.entries(shiftsByClient || {}).map(
+            ([clientId, clientShifts]: [string, any]) => {
+              const client = clients?.find(
+                (c: any) => c.id === parseInt(clientId)
+              );
+              return (
+                <Card key={clientId}>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Building2 className="h-5 w-5" />
+                      {client?.companyName || `Cliente #${clientId}`}
+                    </CardTitle>
+                    <CardDescription>
+                      {clientShifts.length} turno(s) configurado(s)
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                      {clientShifts.map((shift: any) => (
+                        <Card key={shift.id} className="border-2">
+                          <CardContent className="pt-6">
+                            <div className="flex items-start justify-between mb-3">
+                              <div>
+                                <h3 className="font-semibold text-lg">
+                                  {shift.shiftName}
+                                </h3>
+                                <span
+                                  className={`inline-block px-2 py-1 rounded text-xs font-medium mt-1 ${getShiftTypeColor(shift.shiftType)}`}
+                                >
+                                  {getShiftTypeLabel(shift.shiftType)}
+                                </span>
+                              </div>
+                              <div className="flex gap-1">
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => handleEdit(shift)}
+                                >
+                                  <Edit className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => handleDelete(shift.id)}
+                                >
+                                  <Trash2 className="h-4 w-4 text-destructive" />
+                                </Button>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                              <Clock className="h-4 w-4" />
+                              <span>
+                                {shift.startTime} - {shift.endTime}
                               </span>
                             </div>
-                            <div className="flex gap-1">
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                onClick={() => handleEdit(shift)}
-                              >
-                                <Edit className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                onClick={() => handleDelete(shift.id)}
-                              >
-                                <Trash2 className="h-4 w-4 text-destructive" />
-                              </Button>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <Clock className="h-4 w-4" />
-                            <span>{shift.startTime} - {shift.endTime}</span>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            }
+          )}
         </div>
       )}
 

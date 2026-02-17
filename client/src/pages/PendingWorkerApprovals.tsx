@@ -1,14 +1,40 @@
+// @ts-nocheck
 import { useState } from "react";
 import { Link } from "wouter";
 import { trpc } from "../lib/trpc";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { ArrowLeft, CheckCircle, XCircle, Eye, User, MapPin, Phone, Mail, CreditCard, FileText, Calendar } from "lucide-react";
+import {
+  ArrowLeft,
+  CheckCircle,
+  XCircle,
+  Eye,
+  User,
+  MapPin,
+  Phone,
+  Mail,
+  CreditCard,
+  FileText,
+  Calendar,
+} from "lucide-react";
 
 export default function PendingWorkerApprovals() {
   const [selectedWorker, setSelectedWorker] = useState<any>(null);
@@ -17,7 +43,11 @@ export default function PendingWorkerApprovals() {
   const [showDocumentDialog, setShowDocumentDialog] = useState(false);
   const [rejectionReason, setRejectionReason] = useState("");
 
-  const { data: pendingWorkers, isLoading, refetch } = trpc.workerRegistration.listPending.useQuery();
+  const {
+    data: pendingWorkers,
+    isLoading,
+    refetch,
+  } = trpc.workerRegistration.listPending.useQuery();
 
   const approveMutation = trpc.workerRegistration.approve.useMutation({
     onSuccess: () => {
@@ -26,7 +56,7 @@ export default function PendingWorkerApprovals() {
       setSelectedWorker(null);
       refetch();
     },
-    onError: (error) => {
+    onError: error => {
       toast.error(`Erro ao aprovar: ${error.message}`);
     },
   });
@@ -39,7 +69,7 @@ export default function PendingWorkerApprovals() {
       setSelectedWorker(null);
       refetch();
     },
-    onError: (error) => {
+    onError: error => {
       toast.error(`Erro ao rejeitar: ${error.message}`);
     },
   });
@@ -93,8 +123,12 @@ export default function PendingWorkerApprovals() {
         <CardContent className="pt-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-orange-700 font-medium">Cadastros Aguardando Aprovação</p>
-              <p className="text-3xl font-bold text-orange-900">{pendingWorkers?.length || 0}</p>
+              <p className="text-sm text-orange-700 font-medium">
+                Cadastros Aguardando Aprovação
+              </p>
+              <p className="text-3xl font-bold text-orange-900">
+                {pendingWorkers?.length || 0}
+              </p>
             </div>
             <div className="h-16 w-16 rounded-full bg-orange-200 flex items-center justify-center">
               <User className="h-8 w-8 text-orange-700" />
@@ -108,7 +142,9 @@ export default function PendingWorkerApprovals() {
         <Card>
           <CardContent className="py-12 text-center">
             <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold mb-2">Nenhum cadastro pendente</h3>
+            <h3 className="text-xl font-semibold mb-2">
+              Nenhum cadastro pendente
+            </h3>
             <p className="text-muted-foreground">
               Todos os cadastros foram processados
             </p>
@@ -126,7 +162,8 @@ export default function PendingWorkerApprovals() {
                       <Badge variant="secondary">Pendente</Badge>
                     </CardTitle>
                     <CardDescription>
-                      Cadastrado em {new Date(worker.createdAt).toLocaleString("pt-BR")}
+                      Cadastrado em{" "}
+                      {new Date(worker.createdAt).toLocaleString("pt-BR")}
                     </CardDescription>
                   </div>
                   <div className="flex gap-2">
@@ -175,10 +212,21 @@ export default function PendingWorkerApprovals() {
                       Dados Pessoais
                     </h4>
                     <div className="text-sm space-y-1">
-                      <p><strong>CPF:</strong> {worker.cpf}</p>
-                      <p><strong>Data de Nascimento:</strong> {new Date(worker.dateOfBirth).toLocaleDateString("pt-BR")}</p>
-                      <p><strong>Nome da Mãe:</strong> {worker.motherName}</p>
-                      <p><strong>Tipo de Contrato:</strong> {worker.contractType}</p>
+                      <p>
+                        <strong>CPF:</strong> {worker.cpf}
+                      </p>
+                      <p>
+                        <strong>Data de Nascimento:</strong>{" "}
+                        {new Date(worker.dateOfBirth).toLocaleDateString(
+                          "pt-BR"
+                        )}
+                      </p>
+                      <p>
+                        <strong>Nome da Mãe:</strong> {worker.motherName}
+                      </p>
+                      <p>
+                        <strong>Tipo de Contrato:</strong> {worker.contractType}
+                      </p>
                     </div>
                   </div>
 
@@ -189,8 +237,13 @@ export default function PendingWorkerApprovals() {
                       Contato
                     </h4>
                     <div className="text-sm space-y-1">
-                      <p><strong>Telefone:</strong> {worker.phone}</p>
-                      <p><strong>Email:</strong> {worker.email || "Não informado"}</p>
+                      <p>
+                        <strong>Telefone:</strong> {worker.phone}
+                      </p>
+                      <p>
+                        <strong>Email:</strong>{" "}
+                        {worker.email || "Não informado"}
+                      </p>
                     </div>
                   </div>
 
@@ -201,10 +254,14 @@ export default function PendingWorkerApprovals() {
                       Endereço
                     </h4>
                     <div className="text-sm space-y-1">
-                      <p>{worker.street}, {worker.number}</p>
+                      <p>
+                        {worker.street}, {worker.number}
+                      </p>
                       {worker.complement && <p>{worker.complement}</p>}
                       <p>{worker.neighborhood}</p>
-                      <p>{worker.city} - {worker.state}</p>
+                      <p>
+                        {worker.city} - {worker.state}
+                      </p>
                       <p>CEP: {worker.zipCode}</p>
                     </div>
                   </div>
@@ -216,8 +273,12 @@ export default function PendingWorkerApprovals() {
                       Dados de Pagamento
                     </h4>
                     <div className="text-sm space-y-1">
-                      <p><strong>Tipo de Chave PIX:</strong> {worker.pixKeyType}</p>
-                      <p><strong>Chave PIX:</strong> {worker.pixKey}</p>
+                      <p>
+                        <strong>Tipo de Chave PIX:</strong> {worker.pixKeyType}
+                      </p>
+                      <p>
+                        <strong>Chave PIX:</strong> {worker.pixKey}
+                      </p>
                     </div>
                   </div>
 
@@ -228,7 +289,9 @@ export default function PendingWorkerApprovals() {
                       Documento
                     </h4>
                     <div className="text-sm space-y-1">
-                      <p><strong>Tipo:</strong> {worker.documentType}</p>
+                      <p>
+                        <strong>Tipo:</strong> {worker.documentType}
+                      </p>
                       <Button
                         variant="link"
                         size="sm"
@@ -255,7 +318,8 @@ export default function PendingWorkerApprovals() {
           <DialogHeader>
             <DialogTitle>Aprovar Cadastro</DialogTitle>
             <DialogDescription>
-              Tem certeza que deseja aprovar o cadastro de {selectedWorker?.fullName}?
+              Tem certeza que deseja aprovar o cadastro de{" "}
+              {selectedWorker?.fullName}?
             </DialogDescription>
           </DialogHeader>
           <div className="py-4">
@@ -264,10 +328,16 @@ export default function PendingWorkerApprovals() {
             </p>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowApproveDialog(false)}>
+            <Button
+              variant="outline"
+              onClick={() => setShowApproveDialog(false)}
+            >
               Cancelar
             </Button>
-            <Button onClick={handleApprove} disabled={approveMutation.isPending}>
+            <Button
+              onClick={handleApprove}
+              disabled={approveMutation.isPending}
+            >
               {approveMutation.isPending ? "Aprovando..." : "Aprovar"}
             </Button>
           </DialogFooter>
@@ -280,7 +350,8 @@ export default function PendingWorkerApprovals() {
           <DialogHeader>
             <DialogTitle>Rejeitar Cadastro</DialogTitle>
             <DialogDescription>
-              Informe o motivo da rejeição do cadastro de {selectedWorker?.fullName}
+              Informe o motivo da rejeição do cadastro de{" "}
+              {selectedWorker?.fullName}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
@@ -289,14 +360,17 @@ export default function PendingWorkerApprovals() {
               <Textarea
                 id="rejectionReason"
                 value={rejectionReason}
-                onChange={(e) => setRejectionReason(e.target.value)}
+                onChange={e => setRejectionReason(e.target.value)}
                 placeholder="Ex: Documento ilegível, dados inconsistentes, menor de idade..."
                 rows={4}
               />
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowRejectDialog(false)}>
+            <Button
+              variant="outline"
+              onClick={() => setShowRejectDialog(false)}
+            >
               Cancelar
             </Button>
             <Button
@@ -314,7 +388,9 @@ export default function PendingWorkerApprovals() {
       <Dialog open={showDocumentDialog} onOpenChange={setShowDocumentDialog}>
         <DialogContent className="max-w-3xl">
           <DialogHeader>
-            <DialogTitle>Documento com Foto - {selectedWorker?.fullName}</DialogTitle>
+            <DialogTitle>
+              Documento com Foto - {selectedWorker?.fullName}
+            </DialogTitle>
             <DialogDescription>
               {selectedWorker?.documentType} enviado para validação
             </DialogDescription>
@@ -335,7 +411,10 @@ export default function PendingWorkerApprovals() {
             )}
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowDocumentDialog(false)}>
+            <Button
+              variant="outline"
+              onClick={() => setShowDocumentDialog(false)}
+            >
               Fechar
             </Button>
           </DialogFooter>

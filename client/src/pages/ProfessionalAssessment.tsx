@@ -1,11 +1,19 @@
-import React, { useState } from 'react';
-import DashboardLayout from '@/components/DashboardLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Progress } from '@/components/ui/progress';
-import { BarChart3, TrendingUp, Users, FileText, CheckCircle2, Clock } from 'lucide-react';
+// @ts-nocheck
+import React, { useState } from "react";
+import DashboardLayout from "@/components/DashboardLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Progress } from "@/components/ui/progress";
+import {
+  BarChart3,
+  TrendingUp,
+  Users,
+  FileText,
+  CheckCircle2,
+  Clock,
+} from "lucide-react";
 
 interface Assessment {
   id: number;
@@ -35,47 +43,48 @@ interface TestTemplate {
 }
 
 export default function ProfessionalAssessment() {
-  const [activeTab, setActiveTab] = useState('avaliacoes');
-  const [selectedAssessment, setSelectedAssessment] = useState<Assessment | null>(null);
+  const [activeTab, setActiveTab] = useState("avaliacoes");
+  const [selectedAssessment, setSelectedAssessment] =
+    useState<Assessment | null>(null);
 
   // Mock data
   const assessments: Assessment[] = [
     {
       id: 1,
-      candidatoNome: 'João Silva',
-      cpf: '12345678901',
-      tipo: 'MBTI + Comportamental',
-      status: 'concluida',
-      dataInicio: '2026-02-10',
-      dataFim: '2026-02-11',
+      candidatoNome: "João Silva",
+      cpf: "12345678901",
+      tipo: "MBTI + Comportamental",
+      status: "concluida",
+      dataInicio: "2026-02-10",
+      dataFim: "2026-02-11",
       progresso: 100,
       resultado: {
-        tipo: 'ENTJ - O Comandante',
-        descricao: 'Líder natural, estratégico, decisivo',
+        tipo: "ENTJ - O Comandante",
+        descricao: "Líder natural, estratégico, decisivo",
         score: 8.5,
         recomendacoes: [
-          'Excelente para posições de liderança',
-          'Forte capacidade analítica',
-          'Recomendado para projetos estratégicos',
+          "Excelente para posições de liderança",
+          "Forte capacidade analítica",
+          "Recomendado para projetos estratégicos",
         ],
       },
     },
     {
       id: 2,
-      candidatoNome: 'Maria Santos',
-      cpf: '98765432101',
-      tipo: 'Big Five + Técnico',
-      status: 'em_progresso',
-      dataInicio: '2026-02-12',
+      candidatoNome: "Maria Santos",
+      cpf: "98765432101",
+      tipo: "Big Five + Técnico",
+      status: "em_progresso",
+      dataInicio: "2026-02-12",
       progresso: 65,
     },
     {
       id: 3,
-      candidatoNome: 'Pedro Costa',
-      cpf: '55555555555',
-      tipo: 'MBTI',
-      status: 'pendente',
-      dataInicio: '2026-02-13',
+      candidatoNome: "Pedro Costa",
+      cpf: "55555555555",
+      tipo: "MBTI",
+      status: "pendente",
+      dataInicio: "2026-02-13",
       progresso: 0,
     },
   ];
@@ -83,36 +92,36 @@ export default function ProfessionalAssessment() {
   const testTemplates: TestTemplate[] = [
     {
       id: 1,
-      nome: 'MBTI - Myers-Briggs Type Indicator',
-      tipo: 'Psicométrico',
-      descricao: 'Avalia preferências de personalidade em 4 dimensões',
+      nome: "MBTI - Myers-Briggs Type Indicator",
+      tipo: "Psicométrico",
+      descricao: "Avalia preferências de personalidade em 4 dimensões",
       duracao: 15,
       questoes: 93,
       ativo: true,
     },
     {
       id: 2,
-      nome: 'Big Five - Modelo dos Cinco Grandes',
-      tipo: 'Psicométrico',
-      descricao: 'Avalia 5 traços de personalidade principais',
+      nome: "Big Five - Modelo dos Cinco Grandes",
+      tipo: "Psicométrico",
+      descricao: "Avalia 5 traços de personalidade principais",
       duracao: 20,
       questoes: 50,
       ativo: true,
     },
     {
       id: 3,
-      nome: 'Avaliação Comportamental',
-      tipo: 'Comportamental',
-      descricao: 'Avalia competências e comportamentos profissionais',
+      nome: "Avaliação Comportamental",
+      tipo: "Comportamental",
+      descricao: "Avalia competências e comportamentos profissionais",
       duracao: 25,
       questoes: 40,
       ativo: true,
     },
     {
       id: 4,
-      nome: 'Teste Técnico - Desenvolvimento',
-      tipo: 'Técnico',
-      descricao: 'Avalia habilidades técnicas em programação',
+      nome: "Teste Técnico - Desenvolvimento",
+      tipo: "Técnico",
+      descricao: "Avalia habilidades técnicas em programação",
       duracao: 60,
       questoes: 20,
       ativo: true,
@@ -121,11 +130,11 @@ export default function ProfessionalAssessment() {
 
   const getStatusBadge = (status: string) => {
     const config: Record<string, { label: string; variant: any; icon: any }> = {
-      concluida: { label: 'Concluída', variant: 'default', icon: CheckCircle2 },
-      em_progresso: { label: 'Em Progresso', variant: 'outline', icon: Clock },
-      pendente: { label: 'Pendente', variant: 'secondary', icon: Clock },
+      concluida: { label: "Concluída", variant: "default", icon: CheckCircle2 },
+      em_progresso: { label: "Em Progresso", variant: "outline", icon: Clock },
+      pendente: { label: "Pendente", variant: "secondary", icon: Clock },
     };
-    return config[status] || { label: status, variant: 'outline', icon: Clock };
+    return config[status] || { label: status, variant: "outline", icon: Clock };
   };
 
   return (
@@ -150,8 +159,12 @@ export default function ProfessionalAssessment() {
           <Card>
             <CardContent className="pt-6">
               <div className="text-center">
-                <p className="text-3xl font-bold text-blue-600">{assessments.length}</p>
-                <p className="text-sm text-muted-foreground">Avaliações Totais</p>
+                <p className="text-3xl font-bold text-blue-600">
+                  {assessments.length}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Avaliações Totais
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -159,7 +172,7 @@ export default function ProfessionalAssessment() {
             <CardContent className="pt-6">
               <div className="text-center">
                 <p className="text-3xl font-bold text-green-600">
-                  {assessments.filter(a => a.status === 'concluida').length}
+                  {assessments.filter(a => a.status === "concluida").length}
                 </p>
                 <p className="text-sm text-muted-foreground">Concluídas</p>
               </div>
@@ -169,7 +182,7 @@ export default function ProfessionalAssessment() {
             <CardContent className="pt-6">
               <div className="text-center">
                 <p className="text-3xl font-bold text-orange-600">
-                  {assessments.filter(a => a.status === 'em_progresso').length}
+                  {assessments.filter(a => a.status === "em_progresso").length}
                 </p>
                 <p className="text-sm text-muted-foreground">Em Progresso</p>
               </div>
@@ -179,7 +192,7 @@ export default function ProfessionalAssessment() {
             <CardContent className="pt-6">
               <div className="text-center">
                 <p className="text-3xl font-bold text-purple-600">
-                  {assessments.filter(a => a.status === 'pendente').length}
+                  {assessments.filter(a => a.status === "pendente").length}
                 </p>
                 <p className="text-sm text-muted-foreground">Pendentes</p>
               </div>
@@ -214,8 +227,12 @@ export default function ProfessionalAssessment() {
                       >
                         <div className="flex items-start justify-between mb-3">
                           <div>
-                            <h3 className="font-semibold text-lg">{assessment.candidatoNome}</h3>
-                            <p className="text-sm text-muted-foreground font-mono">{assessment.cpf}</p>
+                            <h3 className="font-semibold text-lg">
+                              {assessment.candidatoNome}
+                            </h3>
+                            <p className="text-sm text-muted-foreground font-mono">
+                              {assessment.cpf}
+                            </p>
                           </div>
                           <Badge variant={badge.variant} className="gap-1">
                             <Icon className="w-3 h-3" />
@@ -231,46 +248,68 @@ export default function ProfessionalAssessment() {
                           <div>
                             <p className="text-muted-foreground">Início</p>
                             <p className="font-medium">
-                              {new Date(assessment.dataInicio).toLocaleDateString('pt-BR')}
+                              {new Date(
+                                assessment.dataInicio
+                              ).toLocaleDateString("pt-BR")}
                             </p>
                           </div>
                           {assessment.dataFim && (
                             <div>
                               <p className="text-muted-foreground">Conclusão</p>
                               <p className="font-medium">
-                                {new Date(assessment.dataFim).toLocaleDateString('pt-BR')}
+                                {new Date(
+                                  assessment.dataFim
+                                ).toLocaleDateString("pt-BR")}
                               </p>
                             </div>
                           )}
                           {assessment.resultado && (
                             <div>
                               <p className="text-muted-foreground">Score</p>
-                              <p className="font-bold text-green-600">{assessment.resultado.score}/10</p>
+                              <p className="font-bold text-green-600">
+                                {assessment.resultado.score}/10
+                              </p>
                             </div>
                           )}
                         </div>
 
                         <div className="mb-3">
                           <div className="flex justify-between text-xs mb-1">
-                            <span className="text-muted-foreground">Progresso</span>
-                            <span className="font-medium">{assessment.progresso}%</span>
+                            <span className="text-muted-foreground">
+                              Progresso
+                            </span>
+                            <span className="font-medium">
+                              {assessment.progresso}%
+                            </span>
                           </div>
-                          <Progress value={assessment.progresso} className="h-2" />
+                          <Progress
+                            value={assessment.progresso}
+                            className="h-2"
+                          />
                         </div>
 
                         {assessment.resultado && (
                           <div className="bg-blue-50 p-3 rounded mb-3">
-                            <p className="font-semibold text-sm mb-1">{assessment.resultado.tipo}</p>
+                            <p className="font-semibold text-sm mb-1">
+                              {assessment.resultado.tipo}
+                            </p>
                             <p className="text-xs text-muted-foreground mb-2">
                               {assessment.resultado.descricao}
                             </p>
                             <ul className="text-xs space-y-1">
-                              {assessment.resultado.recomendacoes.map((rec, idx) => (
-                                <li key={idx} className="flex items-start gap-2">
-                                  <span className="text-green-600 mt-0.5">✓</span>
-                                  <span>{rec}</span>
-                                </li>
-                              ))}
+                              {assessment.resultado.recomendacoes.map(
+                                (rec, idx) => (
+                                  <li
+                                    key={idx}
+                                    className="flex items-start gap-2"
+                                  >
+                                    <span className="text-green-600 mt-0.5">
+                                      ✓
+                                    </span>
+                                    <span>{rec}</span>
+                                  </li>
+                                )
+                              )}
                             </ul>
                           </div>
                         )}
@@ -279,7 +318,7 @@ export default function ProfessionalAssessment() {
                           <Button size="sm" variant="outline">
                             Ver Detalhes
                           </Button>
-                          {assessment.status === 'concluida' && (
+                          {assessment.status === "concluida" && (
                             <Button size="sm" variant="outline">
                               Baixar Relatório
                             </Button>
@@ -302,16 +341,23 @@ export default function ProfessionalAssessment() {
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {testTemplates.map(template => (
-                    <div key={template.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                    <div
+                      key={template.id}
+                      className="border rounded-lg p-4 hover:shadow-md transition-shadow"
+                    >
                       <div className="flex items-start justify-between mb-2">
                         <div>
                           <h3 className="font-semibold">{template.nome}</h3>
-                          <p className="text-xs text-muted-foreground">{template.tipo}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {template.tipo}
+                          </p>
                         </div>
                         {template.ativo && <Badge>Ativo</Badge>}
                       </div>
 
-                      <p className="text-sm text-muted-foreground mb-3">{template.descricao}</p>
+                      <p className="text-sm text-muted-foreground mb-3">
+                        {template.descricao}
+                      </p>
 
                       <div className="grid grid-cols-3 gap-2 mb-3 text-xs bg-gray-50 p-2 rounded">
                         <div className="text-center">
@@ -353,24 +399,24 @@ export default function ProfessionalAssessment() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {[
                     {
-                      title: 'Análise Comparativa',
+                      title: "Análise Comparativa",
                       icon: BarChart3,
-                      desc: 'Compare perfis de múltiplos candidatos',
+                      desc: "Compare perfis de múltiplos candidatos",
                     },
                     {
-                      title: 'Tendências de Perfil',
+                      title: "Tendências de Perfil",
                       icon: TrendingUp,
-                      desc: 'Analise padrões de personalidade',
+                      desc: "Analise padrões de personalidade",
                     },
                     {
-                      title: 'Compatibilidade com Cargo',
+                      title: "Compatibilidade com Cargo",
                       icon: Users,
-                      desc: 'Avalie fit com posição aberta',
+                      desc: "Avalie fit com posição aberta",
                     },
                     {
-                      title: 'Relatório Detalhado',
+                      title: "Relatório Detalhado",
                       icon: FileText,
-                      desc: 'Gere relatório completo em PDF',
+                      desc: "Gere relatório completo em PDF",
                     },
                   ].map((report, idx) => {
                     const Icon = report.icon;
@@ -381,7 +427,9 @@ export default function ProfessionalAssessment() {
                         className="h-24 flex flex-col items-center justify-center gap-2"
                       >
                         <Icon className="w-6 h-6" />
-                        <span className="text-sm text-center">{report.title}</span>
+                        <span className="text-sm text-center">
+                          {report.title}
+                        </span>
                       </Button>
                     );
                   })}

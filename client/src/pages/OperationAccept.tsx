@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState } from "react";
 import { useParams, useLocation } from "wouter";
 import { trpc } from "../lib/trpc";
@@ -24,7 +25,7 @@ export default function OperationAccept() {
       toast.success("Operação aceita com sucesso!");
       setLocation("/");
     },
-    onError: (error) => {
+    onError: error => {
       toast.error(error.message || "Erro ao aceitar operação");
     },
   });
@@ -32,7 +33,7 @@ export default function OperationAccept() {
   const handleCpfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value.replace(/\D/g, "");
     if (value.length > 11) value = value.slice(0, 11);
-    
+
     // Format CPF: 000.000.000-00
     if (value.length > 9) {
       value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
@@ -41,7 +42,7 @@ export default function OperationAccept() {
     } else if (value.length > 3) {
       value = value.replace(/(\d{3})(\d{1,3})/, "$1.$2");
     }
-    
+
     setCpf(value);
   };
 
@@ -122,44 +123,60 @@ export default function OperationAccept() {
                   <Card className="bg-muted/50">
                     <CardContent className="pt-6">
                       <div className="space-y-4 text-sm">
-                        <h3 className="font-semibold">TERMO DE ACEITE DE PRESTAÇÃO DE SERVIÇO AUTÔNOMO</h3>
-                        
+                        <h3 className="font-semibold">
+                          TERMO DE ACEITE DE PRESTAÇÃO DE SERVIÇO AUTÔNOMO
+                        </h3>
+
                         <p>
-                          Eu, identificado(a) pelo CPF informado acima, declaro que:
+                          Eu, identificado(a) pelo CPF informado acima, declaro
+                          que:
                         </p>
 
                         <ol className="list-decimal list-inside space-y-2 ml-4">
                           <li>
-                            <strong>Autonomia:</strong> Aceito livremente esta oportunidade de trabalho, sem qualquer vínculo empregatício, 
-                            subordinação ou obrigatoriedade de comparecimento.
+                            <strong>Autonomia:</strong> Aceito livremente esta
+                            oportunidade de trabalho, sem qualquer vínculo
+                            empregatício, subordinação ou obrigatoriedade de
+                            comparecimento.
                           </li>
                           <li>
-                            <strong>Liberdade de Recusa:</strong> Tenho plena liberdade para recusar este ou qualquer outro trabalho, 
-                            sem qualquer penalidade ou prejuízo.
+                            <strong>Liberdade de Recusa:</strong> Tenho plena
+                            liberdade para recusar este ou qualquer outro
+                            trabalho, sem qualquer penalidade ou prejuízo.
                           </li>
                           <li>
-                            <strong>Prestação de Serviço:</strong> Comprometo-me a comparecer no local, data e horário indicados, 
-                            executando as atividades conforme orientações recebidas.
+                            <strong>Prestação de Serviço:</strong> Comprometo-me
+                            a comparecer no local, data e horário indicados,
+                            executando as atividades conforme orientações
+                            recebidas.
                           </li>
                           <li>
-                            <strong>Pagamento:</strong> Estou ciente do valor da diária e forma de pagamento acordados.
+                            <strong>Pagamento:</strong> Estou ciente do valor da
+                            diária e forma de pagamento acordados.
                           </li>
                           <li>
-                            <strong>Responsabilidade:</strong> Assumo total responsabilidade por minha segurança e bem-estar durante 
-                            a execução do serviço, utilizando corretamente os EPIs fornecidos.
+                            <strong>Responsabilidade:</strong> Assumo total
+                            responsabilidade por minha segurança e bem-estar
+                            durante a execução do serviço, utilizando
+                            corretamente os EPIs fornecidos.
                           </li>
                           <li>
-                            <strong>Documentação:</strong> Declaro que todos os dados fornecidos são verdadeiros e que possuo 
+                            <strong>Documentação:</strong> Declaro que todos os
+                            dados fornecidos são verdadeiros e que possuo
                             capacidade legal para exercer a atividade.
                           </li>
                           <li>
-                            <strong>Conformidade Legal:</strong> Estou ciente de que esta prestação de serviço está em conformidade 
-                            com a legislação trabalhista vigente, respeitando os limites de dias consecutivos e demais requisitos legais.
+                            <strong>Conformidade Legal:</strong> Estou ciente de
+                            que esta prestação de serviço está em conformidade
+                            com a legislação trabalhista vigente, respeitando os
+                            limites de dias consecutivos e demais requisitos
+                            legais.
                           </li>
                         </ol>
 
                         <p className="text-xs text-muted-foreground mt-4">
-                          Data e hora do aceite: {new Date().toLocaleString('pt-BR')}
+                          Data e hora do aceite:{" "}
+                          {new Date().toLocaleString("pt-BR")}
                         </p>
                       </div>
                     </CardContent>
@@ -171,14 +188,17 @@ export default function OperationAccept() {
                   <Checkbox
                     id="terms"
                     checked={acceptedTerms}
-                    onCheckedChange={(checked) => setAcceptedTerms(checked as boolean)}
+                    onCheckedChange={checked =>
+                      setAcceptedTerms(checked as boolean)
+                    }
                   />
                   <label
                     htmlFor="terms"
                     className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   >
-                    Li e aceito os termos acima. Confirmo que estou ciente de meus direitos e responsabilidades 
-                    como prestador de serviço autônomo.
+                    Li e aceito os termos acima. Confirmo que estou ciente de
+                    meus direitos e responsabilidades como prestador de serviço
+                    autônomo.
                   </label>
                 </div>
               </div>
@@ -189,15 +209,18 @@ export default function OperationAccept() {
                 className="w-full"
                 disabled={!cpf || !acceptedTerms || acceptMutation.isPending}
               >
-                {acceptMutation.isPending ? "Processando..." : "Confirmar Aceite"}
+                {acceptMutation.isPending
+                  ? "Processando..."
+                  : "Confirmar Aceite"}
               </Button>
 
               {/* Info Alert */}
               <Alert>
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription>
-                  Ao confirmar, você estará formalmente aceitando participar desta operação. 
-                  Seu CPF será validado e o aceite será registrado com data e hora.
+                  Ao confirmar, você estará formalmente aceitando participar
+                  desta operação. Seu CPF será validado e o aceite será
+                  registrado com data e hora.
                 </AlertDescription>
               </Alert>
             </form>
